@@ -1,47 +1,16 @@
 'use client';
-import {myQuotes as initialQuotes} from '@/app/myQuotes.js';
-import {useState} from 'react';
+import {useContext} from 'react';
 import {Button} from '@/app/components/button.js';
 import {Autor} from '@/app/components/autor';
 import {Quote} from '@/app/components/quote';
 import {Card} from '@/app/components/card';
-
-const userId ='user-1';
+import { SomeContext } from "@/app/context/UserContext";
+import { QuotesContext } from '@/app/context/QuotesContext';
+import { userId } from '@/lib/auth';
 
 export default function Home() {
-  const [index, setIndex] = useState(0);
-
-  const [myQuotes, setMyQuotes] = useState(initialQuotes.map(myQuotes => ({...myQuotes, likedBy:[]})))
-
-  function handleNextClick(){
-    if(index < myQuotes.length -1){
-    setIndex(index +1);
-  }
-  }
-
-  function handlePrevClick(){
-    if(index > 0) {
-
-    setIndex(index -1);
-  }
-  }
-
-  function handleLike(){
-
-    setMyQuotes ((prevQuotes)=>{
-      return prevQuotes.map((quote, elementIndex)=>{
-        if(elementIndex === index){
-          const currentLikedBy = quote.likedBy || [];
-          const alreadyLiked = currentLikedBy.includes(userId);
-          return{
-            ...quote, 
-            likedBy: alreadyLiked ? currentLikedBy.filter((id)=> id !==userId):[...currentLikedBy, userId]
-          };
-        }
-        return quote;
-      });
-      });
-  }
+  
+  const {myQuotes,index,handleLike,handleNextClick,handlePrevClick} = useContext(QuotesContext) || {};
 
   const isLikedQuote = ()=>{
     const currentQuote = myQuotes?.[index];
@@ -49,6 +18,7 @@ export default function Home() {
   }
 
   return (
+    
     <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
       <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-90 px-36 bg-white dark:bg-black sm:items-start">
         <Card>
