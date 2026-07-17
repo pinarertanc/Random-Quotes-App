@@ -6,25 +6,41 @@ import { useContext } from "react";
 import { QuotesContext } from "@/app/context/QuotesContext";
 import { userId } from "@/lib/auth";
 import Link from "next/link";
+import { useState } from "react";
+import { useEffect } from "react";
+import {Card} from "@/app/components/card";
 
 
 export default function FavoriteQuotesPage (){
 
   const { myQuotes, handleLike } = useContext(QuotesContext);
 
+  const [mounted, setMounted] = useState(false);
+  
+    useEffect(()=> {setMounted(true);
+    }, []
+  
+    );
+  
+    if(!mounted){
+      return null;
+    }
+
   const likedQuotes =myQuotes?.filter(quote => quote.likedBy?.includes(userId));
   
   return (
-    <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-90 px-36 bg-white dark:bg-black sm:items-start">
-    {likedQuotes.map((quote)=> {
-       const isLiked = quote.likedBy?.includes(userId);
+    <main className="m-auto flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-17 px-17 bg-white dark:bg-black sm:items-start">
+    {likedQuotes.map((quote, idx)=> {
+       const isLiked = (quote.likedBy || []).includes(userId);
     
     return (
-        <div key={quote.quote} className="py-3">
-              <Button onClick = {handleLike} label= {isLiked? "💔" : "❤️"} variant="icon" />
+       <div key={`${quote.quote}-${idx}`} className="py-3 px-6 ">
+          <Card variant="liked-card">
+              <Button onClick = {()=> handleLike(quote)} label= {isLiked? "💔" : "❤️"} variant="icon" />
               <Quote label={`${quote.quote}`}/>
-              <Autor label={`- ${quote.autor}`}/>
-            </div>
+              <Autor label={`- ${quote.autor}`}/>   
+          </Card>
+      </div>
     )
 })}
     {likedQuotes.length === 0 ? (<h1>No quotes were liked yet.Check quotes <Link href="/" >here</Link></h1>

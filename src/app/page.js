@@ -1,15 +1,15 @@
 'use client';
 import {useContext} from 'react';
-import {Button} from '@/app/components/button.js';
+import {Button} from '@/app/components/button';
 import {Autor} from '@/app/components/autor';
 import {Quote} from '@/app/components/quote';
 import {Card} from '@/app/components/card';
-import { SomeContext } from "@/app/context/UserContext";
 import { QuotesContext } from '@/app/context/QuotesContext';
 import { userId } from '@/lib/auth';
+import { useState, useEffect } from 'react';
 
 export default function Home() {
-  
+ 
   const {myQuotes,index,handleLike,handleNextClick,handlePrevClick} = useContext(QuotesContext) || {};
 
   const isLikedQuote = ()=>{
@@ -17,13 +17,24 @@ export default function Home() {
     return(currentQuote?.likedBy || []).includes(userId);
   }
 
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(()=> {setMounted(true);
+  }, []
+
+  );
+
+  if(!mounted){
+    return null;
+  }
+
   return (
     
     <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-90 px-36 bg-white dark:bg-black sm:items-start">
+      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-70 px-26 dark:bg-black sm:items-start">
         <Card>
-        <div className="py-3">
-          <Button onClick = {handleLike} label= {isLikedQuote () ? "💔" : "❤️"} variant="icon" />
+        <div className="h-32 ">
+          <Button onClick = {()=>handleLike()}label= {isLikedQuote () ? "💔" : "❤️"} variant="icon" />
           <Quote label={`${myQuotes[index].quote}`}/>
           <Autor label={`- ${myQuotes[index].autor}`}/>
         </div>
