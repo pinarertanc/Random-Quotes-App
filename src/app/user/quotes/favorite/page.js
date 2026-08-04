@@ -6,25 +6,12 @@ import { useContext } from "react";
 import { QuotesContext } from "@/app/context/QuotesContext";
 import { userId } from "@/lib/auth";
 import Link from "next/link";
-import { useState } from "react";
-import { useEffect } from "react";
 import {Card} from "@/app/components/card";
 
 
 export default function FavoriteQuotesPage (){
 
   const { myQuotes, handleLike } = useContext(QuotesContext);
-
-  const [mounted, setMounted] = useState(false);
-  
-    useEffect(()=> {setMounted(true);
-    }, []
-  
-    );
-  
-    if(!mounted){
-      return null;
-    }
 
   const likedQuotes =myQuotes?.filter(quote => quote.likedBy?.includes(userId));
   

@@ -9,6 +9,6 @@ let classes = "hover:cursor-pointer ";
     }
 
   return (
-    <button onClick = {onClick} className={classes} disabled={disabled}>{label} </button>
+    <button onClick = {onClick} className={classes} disabled={disabled} suppressHydrationWarning={true}>{label}</button>
   )
 }

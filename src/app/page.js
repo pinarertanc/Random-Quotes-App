@@ -17,24 +17,13 @@ export default function Home() {
     return(currentQuote?.likedBy || []).includes(userId);
   }
 
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(()=> {setMounted(true);
-  }, []
-
-  );
-
-  if(!mounted){
-    return null;
-  }
-
   return (
     
     <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
       <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-70 px-26 dark:bg-black sm:items-start">
         <Card>
         <div className="h-32 ">
-          <Button onClick = {()=>handleLike()}label= {isLikedQuote () ? "💔" : "❤️"} variant="icon" />
+          <Button onClick = {handleLike}label= {isLikedQuote () ? "💔" : "❤️"} variant="icon" />
           <Quote label={`${myQuotes[index].quote}`}/>
           <Autor label={`- ${myQuotes[index].autor}`}/>
         </div>

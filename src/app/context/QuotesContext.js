@@ -1,10 +1,16 @@
 'use client';
 
-import { createContext,useState, useEffect } from "react";
+import { createContext,useState,useEffect} from "react";
 import { userId } from "@/lib/auth";
 import { myQuotes as initialQuotes } from "@/app/myQuotes";
 
-export const QuotesContext = createContext(undefined);
+export const QuotesContext = createContext({
+  myQuotes: [],
+  index: 0,
+  handleLike: () => {},
+  handleNextClick: () => {},
+  handlePrevClick: () => {}
+});
 
 export function QuotesContextProvider({children}){
 
