@@ -1,39 +1,53 @@
 'use client';
-import {useContext} from 'react';
-import {Button} from '@/app/components/button';
-import {Autor} from '@/app/components/autor';
-import {Quote} from '@/app/components/quote';
-import {Card} from '@/app/components/card';
+
+import { useContext } from 'react';
+import { ThumbsDownIcon, ThumbsUpIcon } from '@phosphor-icons/react';
+import { Button } from '@/components/ui/button';
+import { Autor } from '@/app/components/autor';
+import { Quote } from '@/app/components/quote';
+import { Card } from '@/app/components/card';
 import { QuotesContext } from '@/app/context/QuotesContext';
 import { userId } from '@/lib/auth';
-import { useState, useEffect } from 'react';
+
 
 export default function Home() {
- 
-  const {myQuotes,index,handleLike,handleNextClick,handlePrevClick} = useContext(QuotesContext) || {};
+  const { myQuotes = [], index = 0, handleLike, handleNextClick, handlePrevClick } = useContext(QuotesContext) || {};
 
-  const isLikedQuote = ()=>{
-    const currentQuote = myQuotes?.[index];
-    return(currentQuote?.likedBy || []).includes(userId);
-  }
+  const currentQuote = myQuotes?.[index];
+  const isLikedQuote = (currentQuote?.likedBy || []).includes(userId);
 
   return (
-    
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-70 px-26 dark:bg-black sm:items-start">
-        <Card>
-        <div className="h-32 ">
-          <Button onClick = {handleLike}label= {isLikedQuote () ? "💔" : "❤️"} variant="icon" />
-          <Quote label={`${myQuotes[index].quote}`}/>
-          <Autor label={`- ${myQuotes[index].autor}`}/>
-        </div>
-        <div className="flex gap-3">
-        <Button onClick={handlePrevClick} label={"Previous Quote"} disabled={index===0} />
-        <Button onClick = {handleNextClick} label={'Next Quote'} disabled={index===myQuotes.length-1}/>
-       </div>      
-       </Card>
+    <main className="flex min-h-screen w-full items-center justify-center p-4 sm:p-8 bg-background text-foreground">
+      <Card className="flex w-full max-w-xl flex-col gap-14 p-6 sm:p-8">
+     
+          <Button onClick={handleLike} variant="ghost" type="button" aria-label={isLikedQuote ? "Beğeniyi kaldır" : "Alıntıyı beğen"}>
+            <span suppressHydrationWarning>
+              {isLikedQuote ? (
+                <ThumbsUpIcon key="liked" size={32} weight="regular" className="h-6 w-6 sm:h-8 sm:w-8"/>
+              ) : (
+                <ThumbsUpIcon key="unliked" size={32} weight="fill" color="var(--chart-2)" className="h-6 w-6 sm:h-8 sm:w-8"/>
+              )}
+            </span>
+          </Button>
+
+          <Quote label={currentQuote?.quote || ''} />
+          <Autor label={currentQuote?.autor ? `- ${currentQuote.autor}` : ''} />
         
-      </main>
-    </div>
+
+        <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:justify-end">
+          <Button onClick={handlePrevClick} disabled={index === 0} size="sm" className="w-full sm:w-auto">
+            Previous Quote
+          </Button>
+          <Button
+            onClick={handleNextClick}
+            disabled={index === (myQuotes.length ? myQuotes.length - 1 : 0)}
+            size="sm"
+            className="w-full sm:w-auto"
+          >
+            Next Quote
+          </Button>
+        </div>
+      </Card>
+    </main>
   );
 }
