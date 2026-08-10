@@ -1,3 +1,8 @@
+
+interface QuoteInterface {
+  label:string;
+}
+
 export const Quote = ({label}) => {
 
 let classes = "font-semibold";

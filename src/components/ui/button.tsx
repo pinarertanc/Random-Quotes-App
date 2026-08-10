@@ -1,6 +1,5 @@
 import { Button as ButtonPrimitive } from "@base-ui/react/button"
 import { cva } from "class-variance-authority";
-
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
@@ -39,12 +38,38 @@ const buttonVariants = cva(
   }
 )
 
+export enum ButtonVariant {
+  Default = "default",
+  Outline = "outline",
+  Secondary = "secondary",
+  Ghost = "ghost",
+  Destructive = "destructive",
+  Link = "link"
+}
+
+export enum ButtonSize {
+  Defult = "default",
+  Xs = "xs",
+  Sm = "sm",
+  Lg = "lg",
+  Icon = "icon"
+}
+
+export interface ButtonPropsInterface {
+  label?:React.ReactNode;
+  variant?:ButtonVariant;
+  size?:ButtonSize;
+  onClick: (...args: any[])=>void;
+  className?:string;
+  [key:string]:any;
+}
+
 function Button({
   className,
-  variant = "default",
-  size = "default",
+  variant = ButtonVariant.Default,
+  size = ButtonSize.Defult,
   ...props
-}) {
+}: ButtonPropsInterface) {
   return (
     <ButtonPrimitive
       data-slot="button"
