@@ -1,7 +1,7 @@
 'use client';
 
 import { createContext, useState, useEffect } from "react";
-import { userId } from "@/lib/auth";
+
 import { myQuotes as initialQuotes, myQuotes } from "@/app/myQuotes";
 
 interface QuotesContextIntercafe {
@@ -10,7 +10,7 @@ interface QuotesContextIntercafe {
   handleLike: (targetQuote: myQuotes) => void;
   handleNextClick: () => void;
   handlePrevClick: () => void;
-
+  
 }
 
 export const QuotesContext = createContext({
@@ -66,11 +66,11 @@ export function QuotesContextProvider<QuotesContextIntercafe>({ children }) {
         if (item.quote!== targetQuote.quote) return item;
 
         const currentLikedBy = item.likedBy || [];
-        const alreadyLiked = currentLikedBy.includes(userId);
+        const alreadyLiked = currentLikedBy.includes('UserId');
 
         const updatedLikedBy = alreadyLiked
-          ? currentLikedBy.filter((id) => id !== userId)
-          : [...currentLikedBy, userId];
+          ? currentLikedBy.filter((id) => id !== 'UserId')
+          : [...currentLikedBy, 'UserId'];
 
         return {
           ...item,

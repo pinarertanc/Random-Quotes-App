@@ -59,15 +59,17 @@ export interface ButtonPropsInterface {
   label?:React.ReactNode;
   variant?:ButtonVariant;
   size?:ButtonSize;
-  onClick: (...args: any[])=>void;
+  onClick?: (...args: any[])=>void;
   className?:string;
   [key:string]:any;
+  asChild?: boolean;
 }
 
 function Button({
   className,
   variant = ButtonVariant.Default,
   size = ButtonSize.Defult,
+  asChild,
   ...props
 }: ButtonPropsInterface) {
   return (
