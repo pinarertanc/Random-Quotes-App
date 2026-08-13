@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/app/components/theme-provider";
 import { Button, ButtonSize, ButtonVariant } from '@/components/ui/button';
 import { auth0 } from "@/lib/auth0";
 import Link from "next/link";
+import { GearIcon } from "@phosphor-icons/react/dist/ssr"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -50,7 +51,7 @@ export default async function RootLayout({ children }) {
               <div className="flex">
               <li> 
               <Button asChild>
-                <Link href="/user/settings">Settings</Link>
+                <Link href="/user/settings"><GearIcon size={32} /></Link>
               </Button>
               </li>
               <li>
