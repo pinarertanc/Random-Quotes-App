@@ -5,16 +5,27 @@ import Image from "next/image";
 
 export default function UserSettingPage(){
 
+
   const {user, error, isLoading} = useUser();
+
+  if(error) throw Error ("Failed loading user.");
+
+  if(isLoading) {
+    return <p>Loading...</p>
+  }
   return(
     <Card>
-      <div className="" >
+      <div>
         <h1>Setting Page</h1>
         <div>
-          <Image src={user.picture} alt="profile picture"/>
+          {user?.picture? (
+          <Image className="rounded-full" src={user?.picture } alt="profile picture" width="50" height="50" loading="eager" />
+          ):(
+            <></>
+          )}
         </div>
-        <h3>User Name: {user.username}</h3>
-        <h3>E-mail:{user.email}</h3>
+        <h3>User Name: {user?.username}</h3>
+        <h3>E-mail:{user?.email}</h3>
       </div>
     </Card>
   )

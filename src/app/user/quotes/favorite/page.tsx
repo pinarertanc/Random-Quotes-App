@@ -4,7 +4,6 @@ import { Quote } from "@/app/components/quote";
 import { Autor } from "@/app/components/autor";
 import { useContext } from "react";
 import { QuotesContext } from "@/app/context/QuotesContext";
-
 import Link from "next/link";
 import {Card} from "@/app/components/card";
 

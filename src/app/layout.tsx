@@ -1,7 +1,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { QuotesContextProvider } from "@/app/context/QuotesContext";
-import { ThemeProvider } from "next-themes";
+import { ThemeProvider } from "@/app/components/theme-provider";
 import { Button, ButtonSize, ButtonVariant } from '@/components/ui/button';
 import { auth0 } from "@/lib/auth0";
 import Link from "next/link";
@@ -31,13 +31,13 @@ export default async function RootLayout({ children }) {
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col">
-        <nav>
-          <ul className="flex gap-10 justify-end max-w-7xl py-6">
+        <nav className="shadow-xl h-full max-h-16 ">
+          <ul className="flex gap-3 justify-end max-w-7xl py-4 ">
             {session ? (
             <>
               <li>
               <Button asChild>
-                <a href="/auth/logout">Settings</a>
+                <Link href="/user/settings">Settings</Link>
               </Button>
               </li>
               <li>
