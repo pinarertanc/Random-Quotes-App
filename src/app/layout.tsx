@@ -32,10 +32,23 @@ export default async function RootLayout({ children }) {
     >
       <body className="min-h-full flex flex-col">
         <nav className="shadow-xl h-full max-h-16 ">
-          <ul className="flex gap-3 justify-end max-w-7xl py-4 ">
+          <ul className="flex gap-3 justify-between max-w-7xl py-4 ">
             {session ? (
             <>
-              <li>
+            <div className="flex">
+              <li> 
+              <Button asChild>
+                <Link href="/">Home</Link>
+              </Button>
+              </li>
+              <li> 
+              <Button asChild>
+                <Link href="/user/quotes/favorite">My Favorite Quotes</Link>
+              </Button>
+              </li>
+              </div>
+              <div className="flex">
+              <li> 
               <Button asChild>
                 <Link href="/user/settings">Settings</Link>
               </Button>
@@ -45,6 +58,7 @@ export default async function RootLayout({ children }) {
                 <a href="/auth/logout">LogOut</a>
               </Button>
               </li>
+              </div>
             </>  
               ) : ( 
             <li className="flex gap-3">

@@ -19,9 +19,9 @@ export default function FavoriteQuotesPage (){
        const isLiked = (quote.likedBy || []).includes('UserId');
     
     return (
-       <div key={`${quote.quote}-${idx}`} className="py-3 px-6 ">
+       <div key={`${quote.quote}-${idx}`} className="py-3 px-6 m-auto">
           <Card variant="liked-card">
-              <Button onClick = {()=> handleLike(quote)} label= {isLiked? "💔" : "❤️"} varian={ButtonVariant.Ghost} />
+              <Button onClick = {()=> handleLike(quote)} label= {isLiked? "💔" : "❤️"} variant={ButtonVariant.Ghost} aria-label={isLiked ? "Beğeniyi kaldır" : "Alıntıyı beğen"} />
               <Quote label={`${quote.quote}`}/>
               <Autor label={`- ${quote.autor}`}/>   
           </Card>
