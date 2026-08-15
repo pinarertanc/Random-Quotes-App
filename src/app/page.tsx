@@ -2,11 +2,12 @@
 
 import { useContext } from 'react';
 import { ThumbsUpIcon } from '@phosphor-icons/react';
-import { Button, ButtonSize, ButtonVariant } from '@/components/ui/button';
+import { Button, ButtonSize, ButtonVariant } from '@/app/components/ui/button';
 import { Autor } from '@/app/components/autor';
 import { Quote } from '@/app/components/quote';
 import { Card } from '@/app/components/card';
 import { QuotesContext } from '@/app/context/QuotesContext';
+import {useUser} from "@auth0/nextjs-auth0/client";
 
 
 
@@ -14,12 +15,14 @@ export default function Home() {
   const { myQuotes = [], index = 0, handleLike, handleNextClick, handlePrevClick } = useContext(QuotesContext) || {};
 
   const currentQuote = myQuotes?.[index];
-  const isLikedQuote = (currentQuote?.likedBy || []).includes('UserId');
+ const {user} = useUser();
+ const userId = user?.sub;
+  const isLikedQuote = (currentQuote?.likedBy || []).includes(userId);
 
   return (
     <main className="flex min-h-screen w-full items-center justify-center p-4 sm:p-8 bg-background text-foreground">
-      <Card className="flex w-full max-w-xl flex-col gap-14 p-6 sm:p-8">
-     
+      <Card className="flex w-full max-w-xl flex-col gap-14 p-6 sm:p-8 ">
+         <div className="text-end">
           <Button onClick={()=> currentQuote && handleLike(currentQuote)} variant={ButtonVariant.Ghost} type="button" aria-label={isLikedQuote ? "Beğeniyi kaldır" : "Alıntıyı beğen"}>
             <ThumbsUpIcon 
             size={32} 
@@ -28,12 +31,13 @@ export default function Home() {
             className="h-6 w-6 sm:h-8 sm:w-8"
           />
           </Button>
+          </div>
 
           <Quote label={currentQuote?.quote || ''} />
           <Autor label={currentQuote?.autor ? `- ${currentQuote.autor}` : ''} />
         
 
-        <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:justify-end">
+        <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:justify-center">
           <Button onClick={handlePrevClick} disabled={index === 0} size={ButtonSize.Sm} className="w-full sm:w-auto">
             Previous Quote
           </Button>

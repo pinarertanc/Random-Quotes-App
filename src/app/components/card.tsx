@@ -9,12 +9,12 @@ children:React.ReactNode;
 
 
 export const Card =({children,variant="primary"}:CardInterface) =>{
- let classes="rounded-md px-10 py-2 w-xl "
+ let classes="rounded-md px-7 py-2 w-full max-w-xl ring-2 ring-(--chart-2)/50 flex flex-col items-center justify-center "
   switch(variant){
     case 'liked-card':
-      classes = classes + "border m-1 h-35"  ;
+      classes = classes + "border m-1 h-36  "  ;
       break;
-      default: classes = classes + "h-48";
+      default: classes = classes + "min-h-48";
   }
   return(
     <div className={classes}>{children}</div>
