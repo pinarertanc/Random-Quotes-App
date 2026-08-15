@@ -9,7 +9,7 @@ children:React.ReactNode;
 
 
 export const Card =({children,variant="primary"}:CardInterface) =>{
- let classes="rounded-md px-7 py-2 w-full max-w-xl ring-2 ring-(--chart-2)/50 flex flex-col items-center justify-center "
+ let classes="rounded-md px-7 py-2 w-full max-w-xl ring-2 ring-(--primary)/50 flex flex-col items-center justify-center "
   switch(variant){
     case 'liked-card':
       classes = classes + "border m-1 h-36  "  ;
