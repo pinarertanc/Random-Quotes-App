@@ -2,18 +2,21 @@
 
 import { useContext } from 'react';
 import { ThumbsUpIcon } from '@phosphor-icons/react';
-import { Button, ButtonSize, ButtonVariant } from '@/components/ui/button';
+import { Button, ButtonSize, ButtonVariant } from '@/app/components/ui/button';
 import { Autor } from '@/app/components/autor';
 import { Quote } from '@/app/components/quote';
 import { Card } from '@/app/components/card';
 import { QuotesContext } from '@/app/context/QuotesContext';
-import { userId } from '@/lib/auth';
+import {useUser} from "@auth0/nextjs-auth0/client";
+
 
 
 export default function Home() {
   const { myQuotes = [], index = 0, handleLike, handleNextClick, handlePrevClick } = useContext(QuotesContext) || {};
 
   const currentQuote = myQuotes?.[index];
+ const {user} = useUser();
+ const userId = user?.sub;
   const isLikedQuote = (currentQuote?.likedBy || []).includes(userId);
 
   return (
@@ -29,12 +32,13 @@ export default function Home() {
               )}
             </span>
           </Button>
+          </div>
 
           <Quote label={currentQuote?.quote || ''} />
           <Autor label={currentQuote?.autor ? `- ${currentQuote.autor}` : ''} />
         
 
-        <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:justify-end">
+        <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:justify-center">
           <Button onClick={handlePrevClick} disabled={index === 0} size={ButtonSize.Sm} className="w-full sm:w-auto">
             Previous Quote
           </Button>

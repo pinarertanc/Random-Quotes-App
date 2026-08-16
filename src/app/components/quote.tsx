@@ -5,7 +5,7 @@ interface QuoteProps {
 
 export const Quote = ({label}) => {
 
-let classes = "font-semibold";
+let classes = "font-semibold text-center";
  
 return(
   <p className={classes} >{label}</p>

@@ -1,8 +1,8 @@
 'use client';
 
 import { createContext, useState, useEffect } from "react";
-import { userId } from "@/lib/auth";
 import { myQuotes as initialQuotes, myQuotes } from "@/app/myQuotes";
+import {useUser} from "@auth0/nextjs-auth0/client";
 
 interface QuotesContextIntercafe {
   myQuotes: myQuotes[],
@@ -10,7 +10,7 @@ interface QuotesContextIntercafe {
   handleLike: (targetQuote: myQuotes) => void;
   handleNextClick: () => void;
   handlePrevClick: () => void;
-
+  
 }
 
 export const QuotesContext = createContext({
@@ -21,7 +21,8 @@ export const QuotesContext = createContext({
   handlePrevClick: () => {}
 });
 
-export function QuotesContextProvider<QuotesContextIntercafe>({ children }) {
+export function QuotesContextProvider<QuotesContextIntercafe>({ children }: { children: React.ReactNode }) {
+  const {user} = useUser();
   const [index, setIndex] = useState<number>(0);
 
   const [myQuotes, setMyQuotes] = useState<myQuotes[]>(() =>
@@ -61,6 +62,13 @@ export function QuotesContextProvider<QuotesContextIntercafe>({ children }) {
   };
 
   const handleLike = (targetQuote: myQuotes) => {
+    if(!user) {
+      alert("Please log in to like the quotes!");
+      window.location.href= "/auth/login";
+      return;
+    }
+
+    const userId = user.sub;
     setMyQuotes((prevQuotes) =>
       prevQuotes.map((item) => {
         if (item.quote!== targetQuote.quote) return item;
