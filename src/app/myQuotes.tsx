@@ -1,4 +1,11 @@
-export const myQuotes = [
+
+export interface myQuotes {
+  quote:string;
+  autor:string;
+  likedBy?: string[];
+}
+
+export const myQuotes: myQuotes[] = [
   {
     quote:"Ömür boyu sorumlusun gönül bağı kurduğun herşeyden.",
     autor:"Antoine de Saint-Exupéry/Küçük Prens."

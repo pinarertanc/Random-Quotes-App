@@ -1,5 +1,5 @@
 'use client';
-import { Button } from "@/app/components/button";
+import { Button } from "@/components/ui/button";
 import { Quote } from "@/app/components/quote";
 import { Autor } from "@/app/components/autor";
 import { useContext } from "react";
@@ -7,7 +7,6 @@ import { QuotesContext } from "@/app/context/QuotesContext";
 import { userId } from "@/lib/auth";
 import Link from "next/link";
 import {Card} from "@/app/components/card";
-
 
 export default function FavoriteQuotesPage (){
 

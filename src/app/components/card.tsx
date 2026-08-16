@@ -1,6 +1,14 @@
-import { children } from "react";
+import {Children} from "react";
 
-export const Card =({children,variant="primary"}) =>{
+
+export interface CardProps {
+variant?: string;
+className?: string;
+children:React.ReactNode;
+}
+
+
+export const Card =({children,variant="primary"}:CardProps) =>{
  let classes="rounded-md px-10 py-2 w-xl "
   switch(variant){
     case 'liked-card':
