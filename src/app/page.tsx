@@ -21,15 +21,16 @@ export default function Home() {
 
   return (
     <main className="flex min-h-screen w-full items-center justify-center p-4 sm:p-8 bg-background text-foreground">
-      <Card className="flex w-full max-w-xl flex-col gap-14 p-6 sm:p-8 ">
-         <div className="text-end">
-          <Button onClick={()=> currentQuote && handleLike(currentQuote)} variant={ButtonVariant.Ghost} type="button" aria-label={isLikedQuote ? "Beğeniyi kaldır" : "Alıntıyı beğen"}>
-            <ThumbsUpIcon 
-            size={32} 
-            weight={isLikedQuote ? "fill" : "regular"} 
-            color={isLikedQuote ? "var(--chart-2)" : "currentColor"}
-            className="h-6 w-6 sm:h-8 sm:w-8"
-          />
+      <Card className="flex w-full max-w-xl flex-col gap-14 p-6 sm:p-8">
+     
+          <Button onClick={handleLike} variant="ghost" type="button" aria-label={isLikedQuote ? "Unlike the quote" : "Like the quote"}>
+            <span suppressHydrationWarning>
+              {isLikedQuote ? (
+                <ThumbsUpIcon key="liked" size={32} weight="regular" className="h-6 w-6 sm:h-8 sm:w-8"/>
+              ) : (
+                <ThumbsUpIcon key="unliked" size={32} weight="fill" color="var(--chart-2)" className="h-6 w-6 sm:h-8 sm:w-8"/>
+              )}
+            </span>
           </Button>
           </div>
 

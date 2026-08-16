@@ -1,15 +1,15 @@
 import {Children} from "react";
 
 
-export interface CardInterface {
+export interface CardProps {
 variant?: string;
 className?: string;
 children:React.ReactNode;
 }
 
 
-export const Card =({children,variant="primary"}:CardInterface) =>{
- let classes="rounded-md px-7 py-2 w-full max-w-xl ring-2 ring-(--primary)/50 flex flex-col items-center justify-center "
+export const Card =({children,variant="primary"}:CardProps) =>{
+ let classes="rounded-md px-10 py-2 w-xl "
   switch(variant){
     case 'liked-card':
       classes = classes + "border m-1 h-36  "  ;
