@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext,useState,useEffect} from "react";
+import { createContext, useState, useEffect } from "react";
 import { userId } from "@/lib/auth";
 import { myQuotes as initialQuotes } from "@/app/myQuotes";
 
@@ -12,75 +12,70 @@ export const QuotesContext = createContext({
   handlePrevClick: () => {}
 });
 
-export function QuotesContextProvider({children}){
-
+export function QuotesContextProvider({ children }) {
   const [index, setIndex] = useState(0);
 
-  const [myQuotes, setMyQuotes] = useState(()=>{
-    if (typeof window !== "undefined"){
-      const savedQuotes = localStorage.getItem("myQuotes");
-      if(savedQuotes){
-        try {
-          return JSON.parse(savedQuotes);
-        } catch (error){
-          console.error("Failed to parse saved quotes:", error);
-        } 
-      }
-    }
-    return initialQuotes.map(myQuotes => ({...myQuotes, likedBy:[]}));
-  });
-
-  useEffect(()=>{
-    if(typeof window !== "undefined"){
-      localStorage.setItem("myQuotes", JSON.stringify(myQuotes));
-    }
-  }, [myQuotes]
-
+  const [myQuotes, setMyQuotes] = useState(() =>
+    initialQuotes.map((q) => ({
+      ...q,
+      likedBy: q.likedBy || []
+    }))
   );
 
-  function handleNextClick(){
-    if(index < myQuotes.length -1){
-    setIndex(index +1);
-  }
-  }
+  useEffect(() => {
+    const savedQuotes = localStorage.getItem("myQuotes");
+    if (savedQuotes) {
+      try {
+        setMyQuotes(JSON.parse(savedQuotes));
+      } catch (error) {
+        console.error("Failed to parse saved quotes:", error);
+      }
+    }
+  }, []);
 
-  function handlePrevClick(){
-    if(index > 0) {
+  useEffect(() => {
+    if (myQuotes.length > 0) {
+      localStorage.setItem("myQuotes", JSON.stringify(myQuotes));
+    }
+  }, [myQuotes]);
 
-    setIndex(index -1);
-  }
-  }
+  const handleNextClick = () => {
+    if (index < myQuotes.length - 1) {
+      setIndex((prevIndex) => prevIndex + 1);
+    }
+  };
 
-  function handleLike(specificQuote = null){
+  const handlePrevClick = () => {
+    if (index > 0) {
+      setIndex((prevIndex) => prevIndex - 1);
+    }
+  };
 
-    console.log("Context içindeki handleLike tetiklendi! Parametre:", specificQuote);
+  const handleLike = () => {
+    setMyQuotes((prevQuotes) =>
+      prevQuotes.map((quote, i) => {
+        if (i !== index) return quote;
 
-    setMyQuotes ((prevQuotes)=>{
-      return prevQuotes.map((quote, elementIndex)=>{
+        const currentLikedBy = quote.likedBy || [];
+        const alreadyLiked = currentLikedBy.includes(userId);
 
-        const isTarget = specificQuote ? quote.quote === specificQuote.quote : elementIndex === index;
+        const updatedLikedBy = alreadyLiked
+          ? currentLikedBy.filter((id) => id !== userId)
+          : [...currentLikedBy, userId];
 
-        if(isTarget){
-          const currentLikedBy = quote.likedBy || [];
-          const alreadyLiked = currentLikedBy.includes(userId);
+        return {
+          ...quote,
+          likedBy: updatedLikedBy
+        };
+      })
+    );
+  };
 
-            return{
-            ...quote, 
-            likedBy: alreadyLiked ? currentLikedBy.filter((id)=> id !==userId):[...currentLikedBy, userId]
-          };  
-        }  
-        return quote;
-      });
-      });
-  }
-
-return(
-    
-  <QuotesContext
-  value={{myQuotes, index, handleLike, handleNextClick, handlePrevClick}}>{children}
-  </QuotesContext>
-
-
-);
-
-};
+  return (
+    <QuotesContext.Provider
+      value={{ myQuotes, index, handleLike, handleNextClick, handlePrevClick }}
+    >
+      {children}
+    </QuotesContext.Provider>
+  );
+}

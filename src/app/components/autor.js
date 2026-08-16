@@ -1,6 +1,6 @@
 export const Autor = ({label}) => {
 
-let classes = "text-mist-800 italic";
+let classes = "italic";
  
 return(
   <p className={classes} >{label}</p>
