@@ -3,7 +3,7 @@ import "./globals.css";
 import { QuotesContextProvider } from "@/app/context/QuotesContext";
 import { ThemeProvider } from "@/app/components/theme-provider";
 import { auth0 } from "@/lib/auth0";
-import { Navbar } from "@/app/components/navbar"; // 1. Navbar'ı import ettik
+import { Navbar } from "@/app/components/navbar"; 
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -21,9 +21,7 @@ export const metadata = {
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const session = await auth0.getSession();
-  const user = session?.user;
-
+ 
   return (
     <html
       lang="en"
@@ -31,8 +29,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col">
-        {/* 2. Navbar bileşenini çağırdık */}
-        <Navbar user={user} hasSession={!!session} />
+       
+        <Navbar/>
 
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <QuotesContextProvider>{children}</QuotesContextProvider>

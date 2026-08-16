@@ -26,7 +26,7 @@ export default function FavoriteQuotesPage (){
     return (
        <div key={`${quote.quote}-${idx}`} className="py-3 px-6 m-auto w-full flex justify-center">
           <Card variant="liked-card">
-              <Button onClick={()=> handleLike(quote)} variant={ButtonVariant.Ghost} type="button" aria-label={isLiked ? "Beğeniyi kaldır" : "Alıntıyı beğen"}>
+              <Button onClick={()=> handleLike(quote)} variant={ButtonVariant.Ghost} type="button" aria-label={isLiked ? "Unlike the quote" : "Like the quote"}>
             <ThumbsUpIcon 
             size={32} 
             weight={isLiked ? "fill" : "regular"} 

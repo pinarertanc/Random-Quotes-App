@@ -1,20 +1,12 @@
-'use client';
+
 import { useUser } from "@auth0/nextjs-auth0/client";
 import { Card } from "@/app/components/card";
 import Image from "next/image";
 
-export default function UserSettingPage() {
-  const { user, error, isLoading } = useUser();
-
-  if (error) throw Error("Failed loading user.");
-
-  if (isLoading) {
-    return (
-      <main className="flex flex-1 items-center justify-center min-h-[calc(100vh-80px)]">
-        <p className="text-lg font-medium">Loading...</p>
-      </main>
-    );
-  }
+export default async function UserSettingPage() {
+ 
+const session = await auth0.getSession();
+const user = session?.user;
 
   return (
     

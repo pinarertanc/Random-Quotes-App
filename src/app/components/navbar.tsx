@@ -5,17 +5,24 @@ import Link from "next/link";
 import Image from "next/image";
 import { Button, ButtonVariant, ButtonSize } from "@/app/components/ui/button";
 import { GearIcon } from "@phosphor-icons/react/dist/ssr";
+import {useUser} from "@auth0/nextjs-auth0/client";
 
-interface NavbarProps {
-  user?: {
-    name?: string;
-    picture?: string;
-  };
-  hasSession: boolean;
-}
 
-export function Navbar({ user, hasSession }: NavbarProps) {
+
+export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const {user, isLoading} = useUser();
+  const hasSession = Boolean(user);
+
+  if (isLoading) {
+    return (
+      <nav className="relative z-50 shadow-xl bg-background border-b w-full h-14 flex items-center px-4 sm:px-8">
+        <div className="w-full max-w-7xl mx-auto flex justify-between items-center">
+          <span className="font-semibold text-sm">QuoteApp</span>
+        </div>
+      </nav>
+    );
+  }
 
   return (
     <nav className="relative z-50 shadow-xl bg-background border-b w-full">
