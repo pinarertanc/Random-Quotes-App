@@ -20,7 +20,7 @@ export default function Home() {
     <main className="flex min-h-screen w-full items-center justify-center p-4 sm:p-8 bg-background text-foreground">
       <Card className="flex w-full max-w-xl flex-col gap-14 p-6 sm:p-8">
      
-          <Button onClick={handleLike} variant="ghost" type="button" aria-label={isLikedQuote ? "Beğeniyi kaldır" : "Alıntıyı beğen"}>
+          <Button onClick={handleLike} variant="ghost" type="button" aria-label={isLikedQuote ? "Unlike the quote" : "Like the quote"}>
             <span suppressHydrationWarning>
               {isLikedQuote ? (
                 <ThumbsUpIcon key="liked" size={32} weight="regular" className="h-6 w-6 sm:h-8 sm:w-8"/>
