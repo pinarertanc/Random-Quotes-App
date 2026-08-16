@@ -1,5 +1,5 @@
 
-interface QuoteInterface {
+interface QuoteProps {
   label:string;
 }
 
