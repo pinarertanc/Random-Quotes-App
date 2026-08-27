@@ -3,29 +3,30 @@
 import { createContext, useState, useEffect } from "react";
 import { myQuotes as initialQuotes, myQuotes } from "@/app/myQuotes";
 import {useUser} from "@auth0/nextjs-auth0/client";
+import { myQuotesProps } from "types/quotes";
 
-interface QuotesContextIntercafe {
-  myQuotes: myQuotes[],
+interface QuotesContexProps {
+  myQuotes: myQuotesProps[],
   index: number,
-  handleLike: (targetQuote: myQuotes) => void;
+  handleLike: (targetQuote: myQuotesProps) => void;
   handleNextClick: () => void;
   handlePrevClick: () => void;
-  
+  addQuote: (newQuote: Partial<myQuotesProps>) => void;
 }
 
 export const QuotesContext = createContext({
   myQuotes: [],
   index: 0,
-  handleLike: (targetQuote: myQuotes) => {},
+  handleLike: (targetQuote: myQuotesProps) => {},
   handleNextClick: () => {},
   handlePrevClick: () => {}
 });
 
-export function QuotesContextProvider<QuotesContextIntercafe>({ children }: { children: React.ReactNode }) {
+export function QuotesContextProvider<QuotesContextProps>({ children }: { children: React.ReactNode }) {
   const {user} = useUser();
   const [index, setIndex] = useState<number>(0);
 
-  const [myQuotes, setMyQuotes] = useState<myQuotes[]>(() =>
+  const [myQuotes, setMyQuotes] = useState<myQuotesProps[]>(() =>
     initialQuotes.map((q) => ({
       ...q,
       likedBy: q.likedBy || []
@@ -61,7 +62,7 @@ export function QuotesContextProvider<QuotesContextIntercafe>({ children }: { ch
     }
   };
 
-  const handleLike = (targetQuote: myQuotes) => {
+  const handleLike = (targetQuote: myQuotesProps) => {
     if(!user) {
       alert("Please log in to like the quotes!");
       window.location.href= "/auth/login";
@@ -82,15 +83,26 @@ export function QuotesContextProvider<QuotesContextIntercafe>({ children }: { ch
 
         return {
           ...item,
+          author: item.author ,
           likedBy: updatedLikedBy
         };
       })
     );
   };
 
+  const addQuote = (newQuote:myQuotesProps)=>{
+    const quoteWithId ={
+      id: Date.now().toString(),
+      quote: newQuote.quote,
+      author: newQuote.author,
+      likedBy: []
+    };
+    setMyQuotes((prevQuotes)=>[quoteWithId, ...prevQuotes]);
+  }
+
   return (
     <QuotesContext
-      value={{ myQuotes, index, handleLike, handleNextClick, handlePrevClick }}
+      value={{ myQuotes, index, handleLike, handleNextClick, handlePrevClick, addQuote }}
     >
       {children}
     </QuotesContext>
