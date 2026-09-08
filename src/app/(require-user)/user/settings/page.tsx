@@ -1,6 +1,6 @@
 
 
-import { Card } from "@/app/components/card";
+import { Card } from "@/components/card";
 import Image from "next/image";
 import { auth0 } from "@/lib/auth0";
 

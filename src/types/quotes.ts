@@ -30,12 +30,15 @@ export interface myQuotesProps {
   author:string;
   likedBy?: string[];
   category?: QuoteCategory;
+  createdAt: string;
+  updatedAt: string;
+  createdBy: string;
 }
 
 export const NewQuoteSchema = z.object({
   quote: z.string().trim().min(3,'Please enter min. 3 characters.').max(500,'Please enter max. 500 characters.'),
   author: z.string().trim().min(1,'Please enter min. 1 character.').max(50,'Please enter max. 50 characters.'),
-  category: z.nativeEnum(QuoteCategory, {
+  category: z.enum(QuoteCategory, {
     message: 'Please select a valid category.',
   })
   })

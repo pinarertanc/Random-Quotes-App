@@ -3,8 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Button, ButtonVariant, ButtonSize } from "@/app/components/ui/button";
-import { House, Heart, Plus, Gear, SignOut, SignIn, List, X } from "@phosphor-icons/react";
+import { Button, ButtonVariant, ButtonSize } from "@/components/ui/button";
+import { HouseIcon, HeartIcon, PlusIcon, GearIcon, SignOutIcon, SignInIcon, ListIcon, XIcon } from "@phosphor-icons/react";
 import { useUser } from "@auth0/nextjs-auth0/client";
 
 export function Navbar() {
@@ -41,7 +41,7 @@ export function Navbar() {
                 href="/" 
                 className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
               >
-                <House size={20} />
+                <HouseIcon size={20} />
                 <span>Home</span>
               </Link>
 
@@ -49,7 +49,7 @@ export function Navbar() {
                 href="/user/quotes/favorite" 
                 className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
               >
-                <Heart size={20} className="text-rose-500" />
+                <HeartIcon size={20} className="text-rose-500" />
                 <span>My Favorites</span>
               </Link>
 
@@ -57,7 +57,7 @@ export function Navbar() {
                 href="/quotes/new" 
                 className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
               >
-                <Plus size={20} />
+                <PlusIcon size={20} />
                 <span>Add Quote</span>
               </Link>
             </div>
@@ -66,7 +66,7 @@ export function Navbar() {
             <div className="hidden sm:flex items-center gap-3">
               <Link href="/user/settings" title="Settings">
                 <Button variant={ButtonVariant.Ghost} size={ButtonSize.Icon} className="rounded-full">
-                  <Gear size={22} className="text-muted-foreground hover:text-foreground transition-colors" />
+                  <GearIcon size={22} className="text-muted-foreground hover:text-foreground transition-colors" />
                 </Button>
               </Link>
 
@@ -85,7 +85,7 @@ export function Navbar() {
 
               <Button asChild variant={ButtonVariant.Outline} size={ButtonSize.Sm} className="gap-2">
                 <a href="/auth/logout">
-                  <SignOut size={16} />
+                  <SignOutIcon size={16} />
                   <span>Log Out</span>
                 </a>
               </Button>
@@ -98,7 +98,7 @@ export function Navbar() {
                 className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent focus:outline-none"
                 aria-label="Toggle Menu"
               >
-                {isOpen ? <X size={26} /> : <List size={26} />}
+                {isOpen ? <XIcon size={26} /> : <ListIcon size={26} />}
               </button>
             </div>
 
@@ -127,7 +127,7 @@ export function Navbar() {
                   onClick={() => setIsOpen(false)}
                   className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-foreground hover:bg-accent transition-colors"
                 >
-                  <House size={20} />
+                  <HouseIcon size={20} />
                   <span>Home</span>
                 </Link>
 
@@ -136,7 +136,7 @@ export function Navbar() {
                   onClick={() => setIsOpen(false)}
                   className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-foreground hover:bg-accent transition-colors"
                 >
-                  <Heart size={20} className="text-rose-500" />
+                  <HeartIcon size={20} className="text-rose-500" />
                   <span>My Favorites</span>
                 </Link>
 
@@ -145,7 +145,7 @@ export function Navbar() {
                   onClick={() => setIsOpen(false)}
                   className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-foreground hover:bg-accent transition-colors"
                 >
-                  <Plus size={20} />
+                  <PlusIcon size={20} />
                   <span>Add New Quote</span>
                 </Link>
 
@@ -154,7 +154,7 @@ export function Navbar() {
                   onClick={() => setIsOpen(false)}
                   className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-foreground hover:bg-accent transition-colors"
                 >
-                  <Gear size={20} />
+                  <GearIcon size={20} />
                   <span>Settings</span>
                 </Link>
 
@@ -165,7 +165,7 @@ export function Navbar() {
                   onClick={() => setIsOpen(false)}
                   className="flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-lg bg-destructive/10 text-destructive font-medium text-sm hover:bg-destructive/20 transition-colors"
                 >
-                  <SignOut size={18} />
+                  <SignOutIcon size={18} />
                   <span>Log Out</span>
                 </a>
               </div>
@@ -176,7 +176,7 @@ export function Navbar() {
           <div className="flex items-center gap-3">
             <Button asChild size={ButtonSize.Sm} className="gap-2">
               <a href="/auth/login">
-                <SignIn size={18} />
+                <SignInIcon size={18} />
                 <span>Log In</span>
               </a>
             </Button>
