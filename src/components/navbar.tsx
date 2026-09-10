@@ -4,11 +4,26 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Button, ButtonVariant, ButtonSize } from "@/components/ui/button";
-import { HouseIcon, HeartIcon, PlusIcon, GearIcon, SignOutIcon, SignInIcon, ListIcon, XIcon } from "@phosphor-icons/react";
+import { 
+  HouseIcon, 
+  HeartIcon, 
+  PlusIcon, 
+  GearIcon, 
+  SignOutIcon, 
+  SignInIcon, 
+  ListIcon, 
+  XIcon, 
+  CaretDownIcon, 
+  BookmarkSimpleIcon,
+  ScrollIcon
+} from "@phosphor-icons/react";
 import { useUser } from "@auth0/nextjs-auth0/client";
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  // 🟢 Mobil menüdeki My Quotes akordiyonu için yeni state
+  const [isMobileQuotesOpen, setIsMobileQuotesOpen] = useState(false); 
+
   const { user, isLoading } = useUser();
   const hasSession = Boolean(user);
 
@@ -27,51 +42,72 @@ export function Navbar() {
   return (
     <nav className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/50 w-full transition-all">
       <div className="flex justify-between items-center w-full max-w-7xl mx-auto h-16 px-4 sm:px-8">
-        
+
         {/* Sol Taraf: Logo */}
-        <Link href="/" className="font-bold text-xl tracking-tight bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent hover:opacity-90 transition-opacity">
+        <Link href="/" className="font-bold text-2xl tracking-tight bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent hover:opacity-90 transition-opacity">
           QuoteApp
         </Link>
 
         {hasSession ? (
           <>
             {/* Masaüstü Navigasyon Linkleri */}
-            <div className="hidden sm:flex items-center gap-1 md:gap-2">
-              <Link 
-                href="/" 
-                className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
+            <div className="hidden sm:flex items-center gap-6">
+              <Link
+                href="/"
+                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
               >
-                <HouseIcon size={20} />
-                <span>Home</span>
+                Home
               </Link>
 
-              <Link 
-                href="/user/quotes/favorite" 
-                className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
-              >
-                <HeartIcon size={20} className="text-rose-500" />
-                <span>My Favorites</span>
-              </Link>
+              {/* Masaüstü HOVER DROPDOWN: My Quotes */}
+              <div className="relative group py-2">
+                <button
+                  type="button"
+                  className="flex items-center gap-1.5 text-sm font-medium text-muted-foreground group-hover:text-foreground transition-colors cursor-pointer"
+                >
+                  <span>My Quotes</span>
+                  <CaretDownIcon
+                    size={14}
+                    className="transition-transform duration-200 group-hover:rotate-180"
+                  />
+                </button>
 
-              <Link 
-                href="/quotes/new" 
+                {/* Dropdown Menü Kutusu */}
+                <div className="absolute left-0 top-full hidden group-hover:flex flex-col w-48 p-1.5 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-xl backdrop-blur-md z-50 animate-in fade-in-50 slide-in-from-top-2">
+                  <Link
+                    href="/user/quotes/favorite"
+                    className="flex items-center gap-2 px-3 py-2 text-sm text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800/80 rounded-lg transition-colors"
+                  >
+                    <HeartIcon size={18} className="text-rose-500" />
+                    <span>My Favorites</span>
+                  </Link>
+
+                  <Link
+                    href="/quotes"
+                    className="flex items-center gap-2 px-3 py-2 text-sm text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800/80 rounded-lg transition-colors"
+                  >
+                    <BookmarkSimpleIcon size={18} className="text-blue-500" />
+                    <span>My Added Quotes</span>
+                  </Link>
+                </div>
+              </div>
+
+              <Link
+                href="/quotes/new"
                 className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
               >
                 <PlusIcon size={20} />
                 <span>Add Quote</span>
               </Link>
-            </div>
-
-            {/* Masaüstü Profil ve Eylemler */}
-            <div className="hidden sm:flex items-center gap-3">
               <Link href="/user/settings" title="Settings">
                 <Button variant={ButtonVariant.Ghost} size={ButtonSize.Icon} className="rounded-full">
                   <GearIcon size={22} className="text-muted-foreground hover:text-foreground transition-colors" />
                 </Button>
               </Link>
+            </div>
 
-              <div className="h-5 w-px bg-border" />
-
+            {/* Masaüstü Profil ve Eylemler */}
+            <div className="hidden sm:flex items-center gap-2">
               {user?.picture && (
                 <Image
                   className="rounded-full ring-2 ring-primary/20 object-cover"
@@ -83,10 +119,12 @@ export function Navbar() {
                 />
               )}
 
-              <Button asChild variant={ButtonVariant.Outline} size={ButtonSize.Sm} className="gap-2">
-                <a href="/auth/logout">
+              <div className="h-6 w-px bg-border" />
+
+              <Button asChild variant={ButtonVariant.Outline} size={ButtonSize.Sm} className="gap-2 ">
+                <a href="/auth/logout" className="flex gap-1">
+                  <span>LogOut</span>
                   <SignOutIcon size={16} />
-                  <span>Log Out</span>
                 </a>
               </Button>
             </div>
@@ -104,7 +142,7 @@ export function Navbar() {
 
             {/* Mobil Açılır Menü */}
             {isOpen && (
-              <div className="absolute top-full left-0 w-full bg-background/95 backdrop-blur-lg border-b shadow-xl flex flex-col gap-2 p-4 sm:hidden animate-in slide-in-from-top-2 duration-200">
+              <div className="absolute top-full left-0 w-full bg-background/95 backdrop-blur-lg border-b shadow-xl flex flex-col gap-1 p-4 sm:hidden animate-in slide-in-from-top-2 duration-200">
                 {/* Mobil Kullanıcı Kartı */}
                 <div className="flex items-center gap-3 px-3 py-2 border-b border-border/50 pb-3 mb-1">
                   {user?.picture && (
@@ -131,14 +169,48 @@ export function Navbar() {
                   <span>Home</span>
                 </Link>
 
-                <Link
-                  href="/user/quotes/favorite"
-                  onClick={() => setIsOpen(false)}
-                  className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-foreground hover:bg-accent transition-colors"
-                >
-                  <HeartIcon size={20} className="text-rose-500" />
-                  <span>My Favorites</span>
-                </Link>
+                {/* 🟢 MOBİL ACCORDION: My Quotes */}
+                <div className="flex flex-col">
+                  <button
+                    type="button"
+                    onClick={() => setIsMobileQuotesOpen(!isMobileQuotesOpen)}
+                    className="flex items-center justify-between w-full px-3 py-2.5 rounded-lg text-sm font-medium text-foreground hover:bg-accent transition-colors"
+                  >
+                    <div className="flex items-center gap-3">
+                      <ScrollIcon size={20} />
+                      <span>My Quotes</span>
+                    </div>
+                    <CaretDownIcon
+                      size={16}
+                      className={`transition-transform duration-200 ${
+                        isMobileQuotesOpen ? "rotate-180" : ""
+                      }`}
+                    />
+                  </button>
+
+                  {/* Alt Linkler (Mobil) */}
+                  {isMobileQuotesOpen && (
+                    <div className="flex flex-col pl-9 pr-2 py-1 gap-1 border-l-2 border-border/60 ml-5 my-1">
+                      <Link
+                        href="/user/quotes/favorite"
+                        onClick={() => setIsOpen(false)}
+                        className="flex items-center gap-2 py-2 px-3 rounded-md text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
+                      >
+                        <HeartIcon size={18} className="text-rose-500" />
+                        <span>My Favorites</span>
+                      </Link>
+
+                      <Link
+                        href="/quotes"
+                        onClick={() => setIsOpen(false)}
+                        className="flex items-center gap-2 py-2 px-3 rounded-md text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
+                      >
+                        <BookmarkSimpleIcon size={18} className="text-blue-500" />
+                        <span>My Added Quotes</span>
+                      </Link>
+                    </div>
+                  )}
+                </div>
 
                 <Link
                   href="/quotes/new"
@@ -166,7 +238,7 @@ export function Navbar() {
                   className="flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-lg bg-destructive/10 text-destructive font-medium text-sm hover:bg-destructive/20 transition-colors"
                 >
                   <SignOutIcon size={18} />
-                  <span>Log Out</span>
+                  <span>LogOut</span>
                 </a>
               </div>
             )}
@@ -175,9 +247,9 @@ export function Navbar() {
           /* Giriş Yapılmamış Durum */
           <div className="flex items-center gap-3">
             <Button asChild size={ButtonSize.Sm} className="gap-2">
-              <a href="/auth/login">
+              <a href="/auth/login" className="flex gap-1">
+                <span>LogIn</span>
                 <SignInIcon size={18} />
-                <span>Log In</span>
               </a>
             </Button>
           </div>

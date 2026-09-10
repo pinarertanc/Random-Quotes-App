@@ -7,7 +7,10 @@ import {
   CaretLeftIcon, 
   CaretRightIcon, 
   QuotesIcon, 
-  TrashIcon 
+  TrashIcon,
+  LockKeyIcon,
+  SignInIcon,
+  XIcon
 } from '@phosphor-icons/react';
 
 import { Button, ButtonSize, ButtonVariant } from '@/components/ui/button';
@@ -26,6 +29,8 @@ export default function Home({ initialQuotes, userId }: HomeProps) {
   const [myQuotes, setMyQuotes] = useState<myQuotesProps[]>(initialQuotes);
   const [isPending, startTransition] = useTransition();
 
+  const [showAuthRequired, setShowAuthRequired] = useState(false);
+
   const handleNextClick = () => {
     if (index < myQuotes.length - 1) {
       setIndex((prevIndex) => prevIndex + 1);
@@ -39,9 +44,9 @@ export default function Home({ initialQuotes, userId }: HomeProps) {
   };
 
   const handleLike = (targetQuote: myQuotesProps) => {
+    
     if (!user) {
-      alert("Please log in to like the quotes!");
-      window.location.href = "/auth/login";
+      setShowAuthRequired(true);
       return;
     }
 
@@ -77,6 +82,56 @@ export default function Home({ initialQuotes, userId }: HomeProps) {
       });
     }
   };
+
+  
+  if (showAuthRequired) {
+    return (
+      <main className="flex min-h-[calc(100vh-4rem)] w-full items-center justify-center p-4 sm:p-8 bg-background text-foreground">
+        <div className="relative w-full max-w-md space-y-6 text-center bg-white dark:bg-zinc-900 p-8 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-xl backdrop-blur-sm">
+          
+          
+          <button
+            onClick={() => setShowAuthRequired(false)}
+            className="absolute top-4 right-4 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-colors"
+            aria-label="Close"
+          >
+            <XIcon size={20} />
+          </button>
+
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-blue-50 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400 border border-blue-100 dark:border-blue-900">
+            <LockKeyIcon size={32} />
+          </div>
+
+          <div className="space-y-2">
+            <h2 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">
+              Authentication Required
+            </h2>
+            <p className="text-sm text-zinc-500 dark:text-zinc-400 max-w-xs mx-auto">
+              Please log in to access your profile settings and favorite quotes.
+            </p>
+          </div>
+
+          <div className="pt-2 flex flex-col gap-2">
+            <a
+              href="/auth/login"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-sm font-medium text-white shadow-lg shadow-blue-500/20 transition-all hover:bg-blue-700 hover:shadow-blue-500/30 active:scale-[0.98]"
+            >
+              <SignInIcon size={20} />
+              <span>Log In</span>
+            </a>
+            
+            <button
+              type="button"
+              onClick={() => setShowAuthRequired(false)}
+              className="text-xs text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 pt-2 transition-colors"
+            >
+              Go back to quotes
+            </button>
+          </div>
+        </div>
+      </main>
+    );
+  }
 
   const currentQuote = myQuotes[index];
   const activeUserId = userId || user?.sub;

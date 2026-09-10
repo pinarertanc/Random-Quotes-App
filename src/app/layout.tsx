@@ -5,8 +5,6 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { Auth0Provider } from '@auth0/nextjs-auth0';
 import { Navbar } from "@/components/navbar"; 
 
-
-
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -23,6 +21,7 @@ export const metadata = {
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  
  
   return (
     <html
@@ -32,8 +31,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     >
       <body className="min-h-full">
         <Auth0Provider>
-       
-      
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             <Navbar/>
 
