@@ -1,9 +1,11 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { QuotesContextProvider } from "@/app/context/QuotesContext";
-import { ThemeProvider } from "@/app/components/theme-provider";
-import { auth0 } from "@/lib/auth0";
-import { Navbar } from "@/app/components/navbar"; 
+
+import { ThemeProvider } from "@/components/theme-provider";
+import { Auth0Provider } from '@auth0/nextjs-auth0';
+import { Navbar } from "@/components/navbar"; 
+
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,14 +30,18 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-full">
+        <Auth0Provider>
        
-        <Navbar/>
-
+      
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <QuotesContextProvider>{children}</QuotesContextProvider>
+            <Navbar/>
+
+          {children}
         </ThemeProvider>
+        </Auth0Provider>
       </body>
+      
     </html>
   );
 }

@@ -1,57 +1,13 @@
-'use client';
+import HomeClient from '@/app/HomeClient';
+import { getQuotes } from './(require-user)/quotes/action';
+import { auth0 } from '@/lib/auth0';
 
-import { useContext } from 'react';
-import { ThumbsUpIcon } from '@phosphor-icons/react';
-import { Button, ButtonSize, ButtonVariant } from '@/app/components/ui/button';
-import { Autor } from '@/app/components/autor';
-import { Quote } from '@/app/components/quote';
-import { Card } from '@/app/components/card';
-import { QuotesContext } from '@/app/context/QuotesContext';
-import {useUser} from "@auth0/nextjs-auth0/client";
+export default async function Home() {
 
 
-
-export default function Home() {
-  const { myQuotes = [], index = 0, handleLike, handleNextClick, handlePrevClick } = useContext(QuotesContext) || {};
-
-  const currentQuote = myQuotes?.[index];
- const {user} = useUser();
- const userId = user?.sub;
-  const isLikedQuote = (currentQuote?.likedBy || []).includes(userId);
-
+  const [quotes, session] = await Promise.all([getQuotes(), auth0.getSession() ])
+  
   return (
-    <main className="flex min-h-screen w-full items-center justify-center p-4 sm:p-8 bg-background text-foreground">
-      <Card className="flex w-full max-w-xl flex-col gap-14 p-6 sm:p-8">
-     
-          <Button onClick={handleLike} variant="ghost" type="button" aria-label={isLikedQuote ? "Unlike the quote" : "Like the quote"}>
-            <span suppressHydrationWarning>
-              {isLikedQuote ? (
-                <ThumbsUpIcon key="liked" size={32} weight="regular" className="h-6 w-6 sm:h-8 sm:w-8"/>
-              ) : (
-                <ThumbsUpIcon key="unliked" size={32} weight="fill" color="var(--chart-2)" className="h-6 w-6 sm:h-8 sm:w-8"/>
-              )}
-            </span>
-          </Button>
-          </div>
-
-          <Quote label={currentQuote?.quote || ''} />
-          <Autor label={currentQuote?.autor ? `- ${currentQuote.autor}` : ''} />
-        
-
-        <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:justify-center">
-          <Button onClick={handlePrevClick} disabled={index === 0} size={ButtonSize.Sm} className="w-full sm:w-auto">
-            Previous Quote
-          </Button>
-          <Button
-            onClick={handleNextClick}
-            disabled={index === (myQuotes.length ? myQuotes.length - 1 : 0)}
-            size={ButtonSize.Sm}
-            className="w-full sm:w-auto"
-          >
-            Next Quote
-          </Button>
-        </div>
-      </Card>
-    </main>
+    <HomeClient initialQuotes={quotes} userId={session?.user?.sub ?? null}/>
   );
 }
