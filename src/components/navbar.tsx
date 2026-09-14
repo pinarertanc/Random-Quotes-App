@@ -292,7 +292,7 @@ export function Navbar() {
                       onClick={() => setIsOpen(false)}
                       className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-800 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-zinc-800 transition-colors"
                     >
-                      <BookshelfIcon size={18} />
+                      <BooksIcon size={18} />
                       <span>My Shelf</span>
                     </Link>
 
