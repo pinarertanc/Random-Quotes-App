@@ -20,6 +20,7 @@ export interface myQuotesProps {
   quote:string;
   author:string;
   likedBy?: string[];
+ 
 }
 
 export const NewQuoteSchema = z.object({

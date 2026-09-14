@@ -1,26 +1,20 @@
 'use client';
 
 import { createContext, useState, useEffect } from "react";
-import { myQuotes as initialQuotes, myQuotes } from "@/app/myQuotes";
+import { myQuotes as initialQuotes } from "@/app/myQuotes";
 import {useUser} from "@auth0/nextjs-auth0/client";
 import { myQuotesProps } from "types/quotes";
 
-interface QuotesContexProps {
+interface QuotesContextProps {
   myQuotes: myQuotesProps[],
   index: number,
   handleLike: (targetQuote: myQuotesProps) => void;
   handleNextClick: () => void;
   handlePrevClick: () => void;
-  addQuote: (newQuote: Partial<myQuotesProps>) => void;
+  addQuote: (newQuote: myQuotesProps) => void;
 }
 
-export const QuotesContext = createContext({
-  myQuotes: [],
-  index: 0,
-  handleLike: (targetQuote: myQuotesProps) => {},
-  handleNextClick: () => {},
-  handlePrevClick: () => {}
-});
+export const QuotesContext = createContext<QuotesContextProps | null>(null);
 
 export function QuotesContextProvider<QuotesContextProps>({ children }: { children: React.ReactNode }) {
   const {user} = useUser();

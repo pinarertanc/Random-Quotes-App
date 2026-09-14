@@ -7,9 +7,10 @@ import {handleNewQuote} from "@/app/(require-user)/quotes/new/action";
 import { Spinner } from "@/app/components/ui/spinner";
 import { redirect } from "next/navigation";
 import { QuotesContext } from "@/app/(context)/QuotesContext";
+import { NewQuoteFormState } from "types/quotes";
 
 
-const initialFormState = {
+const initialFormState : NewQuoteFormState = {
   success: false,
 }
 
@@ -37,26 +38,36 @@ export default function NewQuotePage(){
       )
     }
 
+    const quoteError = state.errors?.fieldErrors?.quote;
+    const authorError = state.errors?.fieldErrors?.author; 
+
   return(
     
-    <form autoComplete="off" className="w-full max-w-3xl mx-auto my-20 sm:my-40 px-4 sm:px-8" action={dispatchAction}>
-      
+    <form autoComplete="off" className="w-full max-w-3xl mx-auto my-20 sm:my-40 px-4 sm:px-8" action={dispatchAction} aria-describedby={state.message}>
+      {
+        state.message && (
+          <p id="form-error" role="alert" className="text-destructive">{state.message}</p>
+
+        )
+      }
      <FieldGroup>
           <Field>
             <FieldLabel htmlFor="quote">Quote</FieldLabel>
-            <Input type="text" id="quote" name="quote" defaultValue={state.data?.quote}></Input>
-            {state.errors?.fieldErrors?.quote && (
-            <FieldError errors={state.errors?.fieldErrors.quote}>
-              {state.errors?.fieldErrors?.quote?.join(', ')}
+            <Input type="text" id="quote" name="quote" defaultValue={state.data?.quote} aria-invalid={quoteError? "true" : "false"}
+            aria-describedby = {quoteError ? "quote-error" : undefined}></Input>
+            {quoteError && (
+            <FieldError id="quote-error" role="alert" errors={quoteError}>
+              {quoteError.join(', ')}
             </FieldError>
             )}
           </Field>
           <Field>
             <FieldLabel htmlFor="author">Author</FieldLabel>
-            <Input type="text" id="author" name="author" defaultValue={state.data?.author}></Input>
-            {state.errors?.fieldErrors?.author && (
-            <FieldError errors={state.errors?.fieldErrors.author}>
-              {state.errors?.fieldErrors?.author?.join(', ')}
+            <Input type="text" id="author" name="author" defaultValue={state.data?.author} aria-invalid={authorError? "true" : "false"}
+            aria-describedby = {authorError ? "author-error" : undefined}></Input>
+            {authorError && (
+            <FieldError id="author-error" role="alert" errors={authorError}>
+              {authorError.join(', ')}
             </FieldError>
           )}
           </Field>
