@@ -1,9 +1,9 @@
 
-export interface AutorProps {
+export interface AuthorProps {
 label:string;
 }
 
-export const Autor = ({label}:AutorProps) => {
+export const Author = ({label}:AuthorProps) => {
 
 let classes = "italic text-center";
  

@@ -1,7 +1,8 @@
 
-import { useUser } from "@auth0/nextjs-auth0/client";
+
 import { Card } from "@/app/components/card";
 import Image from "next/image";
+import { auth0 } from "@/lib/auth0";
 
 export default async function UserSettingPage() {
  
