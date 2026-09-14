@@ -1,22 +1,29 @@
-import {Children} from "react";
+import { ReactNode } from "react";
 
-
-export interface CardProps {
-variant?: string;
-className?: string;
-children:React.ReactNode;
+interface CardProps {
+  children: ReactNode;
+  className?: string;
 }
 
-
-export const Card =({children,variant="primary"}:CardProps) =>{
- let classes="rounded-md px-10 py-2 w-xl "
-  switch(variant){
-    case 'liked-card':
-      classes = classes + "border m-1 h-36  "  ;
-      break;
-      default: classes = classes + "min-h-48";
-  }
-  return(
-    <div className={classes}>{children}</div>
-  )
+export function Card({ children, className = "" }: CardProps) {
+  return (
+    <div
+      className={`
+        relative rounded-2xl sm:rounded-3xl p-4 sm:p-6
+        /* Dengeli Cam Opaklığı */
+        bg-white/20 dark:bg-black/30
+        /* Dengeli Buzlanma ve Renk Doygunluğu */
+        backdrop-blur-md backdrop-saturate-150
+        /* Cam Kenarlığı */
+        border border-white/40 dark:border-white/15
+        /* Gölge */
+        shadow-[0_8px_32px_0_rgba(0,0,0,0.12)]
+        dark:shadow-[0_8px_32px_0_rgba(0,0,0,0.4)]
+        transition-all duration-300
+        ${className}
+      `}
+    >
+      {children}
+    </div>
+  );
 }

@@ -31,9 +31,9 @@ export default async function FavoriteQuotesPage() {
           <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
             My Favorite Quotes
           </h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            {likedQuotes?.length} quotes saved in your collection
-          </p>
+        <p className="inline-flex items-center text-xs font-semibold text-slate-700 dark:text-slate-200 bg-white/40 dark:bg-black/40 px-3 py-1 rounded-full border border-white/40 dark:border-white/10 backdrop-blur-sm shadow-xs mt-2">
+  {likedQuotes?.length || 0} quotes saved in your collection
+</p>
         </div>
       </div>
 

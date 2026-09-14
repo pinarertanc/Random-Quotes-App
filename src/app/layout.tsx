@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Auth0Provider } from '@auth0/nextjs-auth0';
 import { Navbar } from "@/components/navbar"; 
+import { Background } from "@/components/background";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,7 +30,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <body className="min-h-full">
+        
+      <body className="relative min-h-screen antialiased">
+
+        <Background />
         <Auth0Provider>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             <Navbar/>

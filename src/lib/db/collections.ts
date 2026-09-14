@@ -1,4 +1,4 @@
-
+import 'server-only';
 
 import type { Collection } from 'mongodb';
 import { getDb } from '@/lib/db/client';

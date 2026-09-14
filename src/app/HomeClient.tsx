@@ -44,7 +44,6 @@ export default function Home({ initialQuotes, userId }: HomeProps) {
   };
 
   const handleLike = (targetQuote: myQuotesProps) => {
-    
     if (!user) {
       setShowAuthRequired(true);
       return;
@@ -83,13 +82,10 @@ export default function Home({ initialQuotes, userId }: HomeProps) {
     }
   };
 
-  
   if (showAuthRequired) {
     return (
-      <main className="flex min-h-[calc(100vh-4rem)] w-full items-center justify-center p-4 sm:p-8 bg-background text-foreground">
-        <div className="relative w-full max-w-md space-y-6 text-center bg-white dark:bg-zinc-900 p-8 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-xl backdrop-blur-sm">
-          
-          
+      <main className="flex min-h-[calc(100vh-4rem)] w-full items-center justify-center p-4 sm:p-8 bg-transparent text-foreground">
+        <div className="relative w-full max-w-md space-y-6 text-center bg-white/10 dark:bg-black/20 p-8 rounded-2xl border border-white/20 dark:border-white/10 shadow-2xl backdrop-blur-md">
           <button
             onClick={() => setShowAuthRequired(false)}
             className="absolute top-4 right-4 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-colors"
@@ -98,7 +94,7 @@ export default function Home({ initialQuotes, userId }: HomeProps) {
             <XIcon size={20} />
           </button>
 
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-blue-50 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400 border border-blue-100 dark:border-blue-900">
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-blue-50/50 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400 border border-blue-100/30 dark:border-blue-900/30">
             <LockKeyIcon size={32} />
           </div>
 
@@ -140,11 +136,12 @@ export default function Home({ initialQuotes, userId }: HomeProps) {
     : false;
 
   return (
-    <main className="flex min-h-[calc(100vh-4rem)] w-full items-center justify-center p-4 sm:p-8 bg-background text-foreground">
-      <Card className="relative flex w-full max-w-2xl flex-col justify-between p-6 sm:p-10 border border-border/80 shadow-lg min-h-[380px]">
+    <main className="flex min-h-[calc(100vh-4rem)] w-full items-center justify-center p-4 sm:p-8 bg-transparent text-foreground">
+      {/* 🟢 Card üzerindeki ezici bg-white/70, bg-zinc-900/70 ve border sınıfları temizlendi */}
+      <Card className="flex w-full max-w-2xl flex-col justify-between min-h-[300px]">
 
-        <div className="flex items-center justify-between w-full mb-4">
-          <div className="text-primary/30">
+        <div className="flex items-center justify-between w-full mb-2">
+          <div className="text-primary/40">
             <QuotesIcon size={40} weight="fill" />
           </div>
 
@@ -168,17 +165,17 @@ export default function Home({ initialQuotes, userId }: HomeProps) {
           </Button>
         </div>
 
-        <div className="flex flex-col items-center text-center my-auto py-6 space-y-4">
+        <div className="flex flex-col items-center text-center my-auto py-2 space-y-2">
           <Quote label={currentQuote?.quote || ''} />
           {currentQuote?.author && (
             <Author label={`- ${currentQuote.author}`} />
           )}
         </div>
 
-        <div className="pt-6 border-t border-border/50 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <span className="text-xs text-muted-foreground font-medium order-2 sm:order-1">
-            {myQuotes.length > 0 ? `${index + 1} / ${myQuotes.length}` : '0 / 0'}
-          </span>
+        <div className="pt-6 border-t border-white/20 dark:border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
+         <span className="text-xs font-semibold text-slate-700 dark:text-slate-200 bg-white/40 dark:bg-black/40 px-3 py-1 rounded-full border border-white/40 dark:border-white/10 backdrop-blur-sm order-2 sm:order-1 shadow-xs">
+  {myQuotes.length > 0 ? `${index + 1} / ${myQuotes.length}` : '0 / 0'}
+</span>
 
           <div className="flex items-center gap-3 w-full sm:w-auto order-1 sm:order-2">
             <Button

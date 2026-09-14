@@ -1,4 +1,4 @@
-
+'use server';
 import { ObjectId } from 'mongodb';
 import { quotesCollection } from '@/lib/db/collections';
 import type { myQuotesProps, QuoteSeed } from '@/types/quotes';

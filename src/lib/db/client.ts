@@ -1,4 +1,4 @@
-
+import 'server-only';
 import { MongoClient, type Db } from 'mongodb';
 
 const globalForMongo = globalThis as typeof globalThis & {
