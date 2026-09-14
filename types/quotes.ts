@@ -29,7 +29,7 @@ export interface myQuotesProps {
   quote:string;
   author:string;
   likedBy?: string[];
-  category?: QuoteCategory;
+ 
 }
 
 export const NewQuoteSchema = z.object({
