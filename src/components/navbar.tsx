@@ -15,7 +15,8 @@ import {
   XIcon, 
   CaretDownIcon, 
   BookmarkSimpleIcon,
-  ScrollIcon
+  ScrollIcon,
+  BooksIcon,
 } from "@phosphor-icons/react";
 import { useUser } from "@auth0/nextjs-auth0/client";
 
@@ -30,9 +31,12 @@ export function Navbar() {
     return (
       <header className="sticky top-3 z-50 px-4 sm:px-8 max-w-7xl mx-auto w-full">
         <nav className="bg-white/30 dark:bg-black/30 backdrop-blur-md border border-white/30 dark:border-white/10 rounded-2xl w-full h-16 flex items-center px-6 shadow-lg shadow-black/5">
-          <span className="font-bold text-xl tracking-tight bg-gradient-to-r from-slate-700 via-indigo-900 to-slate-800 dark:from-slate-200 dark:via-indigo-200 dark:to-slate-400 bg-clip-text text-transparent">
-            QuoteApp
-          </span>
+          <div className="flex items-center gap-2">
+            <BooksIcon size={24} className="text-indigo-600 dark:text-indigo-400" />
+            <span className="font-bold text-xl tracking-tight bg-gradient-to-r from-slate-700 via-indigo-900 to-slate-800 dark:from-slate-200 dark:via-indigo-200 dark:to-slate-400 bg-clip-text text-transparent">
+              Shelfie
+            </span>
+          </div>
         </nav>
       </header>
     );
@@ -54,12 +58,19 @@ export function Navbar() {
         <nav className="relative bg-white/40 dark:bg-zinc-900/40 backdrop-blur-xl border border-white/50 dark:border-white/10 rounded-2xl sm:rounded-3xl shadow-lg shadow-black/5 dark:shadow-black/20 w-full transition-all duration-300">
           <div className="flex justify-between items-center w-full h-16 px-5 sm:px-7">
 
-            {/* Sol Taraf: Modern Gradient Logo */}
+            {/* Sol Taraf: Modern Gradient Logo & İkon */}
             <Link 
               href="/" 
-              className="font-bold text-2xl tracking-tight bg-gradient-to-r from-slate-800 via-slate-700 to-indigo-900 dark:from-slate-100 dark:via-slate-300 dark:to-indigo-200 bg-clip-text text-transparent hover:opacity-80 transition-opacity"
+              className="flex items-center gap-2.5 group transition-opacity hover:opacity-85"
             >
-              QuoteApp
+              <BooksIcon 
+                size={26} 
+                className="text-indigo-600 dark:text-indigo-400 transition-transform group-hover:scale-105" 
+                weight="duotone"
+              />
+              <span className="font-bold text-2xl tracking-tight bg-gradient-to-r from-slate-800 via-slate-700 to-indigo-900 dark:from-slate-100 dark:via-slate-300 dark:to-indigo-200 bg-clip-text text-transparent">
+                Shelfie
+              </span>
             </Link>
 
             {hasSession ? (
@@ -89,7 +100,7 @@ export function Navbar() {
                       />
                     </button>
 
-                    {/* 🟢 Profil Menüsü ile Arka Planı, Opaklığı ve Kenarlığı Birebir Eşitlenmiş Dropdown */}
+                    {/* Dropdown Menü */}
                     <div className="absolute left-0 top-full pt-1.5 hidden group-hover:block z-50 animate-in fade-in-50 slide-in-from-top-2">
                       <div className="flex flex-col w-56 p-1.5 bg-white/80 dark:bg-zinc-900/80 border border-white/50 dark:border-white/10 rounded-2xl shadow-xl shadow-black/10 backdrop-blur-2xl">
                         <Link
@@ -110,6 +121,15 @@ export function Navbar() {
                       </div>
                     </div>
                   </div>
+
+                  {/* 🟢 YENİ: My Shelf */}
+                  <Link
+                    href="/user/shelf"
+                    className="flex items-center gap-2 px-3.5 py-2 rounded-xl text-sm font-semibold text-foreground/85 hover:text-foreground hover:bg-white/50 dark:hover:bg-white/15 backdrop-blur-sm transition-all"
+                  >
+                    <BooksIcon size={18} className="text-foreground/80" />
+                    <span>My Shelf</span>
+                  </Link>
 
                   {/* Add Quote */}
                   <Link
@@ -265,6 +285,16 @@ export function Navbar() {
                         </div>
                       )}
                     </div>
+
+                    {/* 🟢 YENİ: My Shelf (Mobil) */}
+                    <Link
+                      href="/user/shelf"
+                      onClick={() => setIsOpen(false)}
+                      className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-800 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-zinc-800 transition-colors"
+                    >
+                      <BookshelfIcon size={18} />
+                      <span>My Shelf</span>
+                    </Link>
 
                     <Link
                       href="/quotes/new"

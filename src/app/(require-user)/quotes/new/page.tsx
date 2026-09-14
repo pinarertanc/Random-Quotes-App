@@ -6,7 +6,7 @@ import { useActionState, useEffect } from "react";
 import { handleNewQuote } from "@/app/(require-user)/quotes/new/action";
 import { Spinner } from "@/components/ui/spinner";
 import { useForm } from "react-hook-form";
-import { NewQuoteSchema, QuoteCategory } from "@/types/quotes";
+import { NewQuoteSchema, ReadingStatus } from "@/types/quotes";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { NewQuoteFormState } from "@/types/quotes";
@@ -41,6 +41,7 @@ export default function NewQuotePage() {
   const quoteError = state.errors?.fieldErrors?.quote;
   const authorError = state.errors?.fieldErrors?.author;
   const categoryError = state.errors?.fieldErrors?.category;
+  const titleError = state.errors?.fieldErrors?.title;
 
   return (
 
@@ -77,9 +78,21 @@ export default function NewQuotePage() {
         </Field>
 
         <Field>
-          <FieldLabel htmlFor="category">This Quote From:</FieldLabel>
+          <FieldLabel htmlFor="title">Book Title</FieldLabel>
+          <Input type="text" id="title" name="title" defaultValue={state.data?.title} aria-invalid={titleError ? "true" : "false"}
+            aria-describedby={titleError ? "title-error" : undefined} 
+            {...register('title')} ></Input>
+          {titleError && (
+            <FieldError id="title-error" role="alert" errors={titleError}>
+              {titleError.join(', ')}
+            </FieldError>
+          )}
+        </Field>
+
+        <Field>
+          <FieldLabel htmlFor="category">Reading Status:</FieldLabel>
           <div className="grid grid-cols-3 gap-3 mt-2">
-            {Object.values(QuoteCategory).map((catValue) => (
+            {Object.values(ReadingStatus).map((catValue) => (
               <label
                 key={catValue}
                 htmlFor={`category-${catValue}`}

@@ -1,23 +1,25 @@
 import {z} from 'zod';
 
 
-export enum QuoteCategory {
-  BOOK = 'Book',
-  SONG = 'Song',
-  RANDOM = 'Random',
+export enum ReadingStatus {
+  READ = "Read",
+  CURRENTLY_READING = "Currently Reading",
+  WANT_TO_READ = "Want to Read",
 }
 
 export interface NewQuoteFormState {
   success: boolean,
   data?: {
     author?: string,
-    quote? : string
+    quote? : string,
+    title?: string,
     category?: string;
   };
   errors?: {
     fieldErrors: {
       author?: string[],
-      quote?: string[]
+      quote?: string[],
+      title?: string[],
       category?: string[]
     }
   },
@@ -30,10 +32,17 @@ export interface myQuotesProps {
   author:string;
   likedBy?: string[];
   category?: string[];
+  title?: string;
  
 }
 
 export const NewQuoteSchema = z.object({
+  title: z
+    .string()
+    .trim()
+    .min(1, 'Book title is required.')
+    .min(2, 'Book title must be at least 2 characters long.')
+    .max(100, 'Book title cannot exceed 100 characters.'),
   quote: z
     .string()
     .trim()
@@ -45,7 +54,7 @@ export const NewQuoteSchema = z.object({
     .trim()
     .min(1, 'Author name is required.')
     .max(50, 'Author name cannot exceed 50 characters.'),
-  category: z.enum(QuoteCategory, {
+  category: z.enum(ReadingStatus, {
     message: 'Please select a valid category from the list.',
   }),
 });
