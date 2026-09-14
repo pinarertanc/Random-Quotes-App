@@ -1,17 +1,16 @@
 'use client';
-import { Field, FieldGroup, FieldError, FieldLabel } from "@/app/components/ui/field";
-import { Input } from "@/app/components/ui/input";
-import { Button } from "@/app/components/ui/button";
-import { useActionState, useContext, useEffect } from "react";
+import { Field, FieldGroup, FieldError, FieldLabel } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { useActionState, useEffect } from "react";
 import { handleNewQuote } from "@/app/(require-user)/quotes/new/action";
-import { Spinner } from "@/app/components/ui/spinner";
-import { redirect } from "next/navigation";
-import { QuotesContext } from "@/app/(context)/QuotesContext";
-import { NewQuoteFormState } from "types/quotes";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { NewQuoteSchema } from "types/quotes";
+import { Spinner } from "@/components/ui/spinner";
 import { useForm } from "react-hook-form";
-import { QuoteCategory } from "types/quotes";
+import { NewQuoteSchema, QuoteCategory } from "@/types/quotes";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
+import { NewQuoteFormState } from "@/types/quotes";
+
 
 
 const initialFormState: NewQuoteFormState = {
@@ -21,19 +20,15 @@ const initialFormState: NewQuoteFormState = {
 
 export default function NewQuotePage() {
 
+  const router = useRouter();
   const [state, dispatchAction, isPending] = useActionState(handleNewQuote, initialFormState);
-  const { addQuote } = useContext(QuotesContext);
-  const { register, formState: { errors } } = useForm({ mode: 'onBlur', resolver: zodResolver(NewQuoteSchema) });
+  const { register, formState: { errors }} = useForm({ mode: 'onBlur', resolver: zodResolver(NewQuoteSchema) });
 
   useEffect(() => {
-    if (state?.success && state?.data) {
-      addQuote?.({
-        quote: state.data.quote,
-        author: state.data.author
-      });
-      redirect('/quotes/new/success');
+    if (state?.success) {
+      router.push('/quotes/new/success');
     }
-  }, [state?.success, state?.data, addQuote]);
+  }, [state?.success, router]);
 
   if (isPending) {
     return (
