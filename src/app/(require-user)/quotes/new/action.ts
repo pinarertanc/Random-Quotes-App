@@ -1,7 +1,7 @@
 'use server';
 
 import { auth0 } from "@/lib/auth0";
-import { NewQuoteFormState, NewQuoteSchema } from "types/quotes";
+import { NewQuoteFormState, NewQuoteSchema, QuoteCategory } from "types/quotes";
 import {z} from 'zod';
 
 
@@ -22,7 +22,8 @@ export async function handleNewQuote(
 
   const rawData ={
     quote:formData.get('quote') ?? '',
-    author:formData.get('author') ?? ''
+    author:formData.get('author') ?? '',
+    category:formData.get('category') ?? ''
   };
 
  const safeParsedResult = NewQuoteSchema.safeParse(rawData);
@@ -36,17 +37,18 @@ export async function handleNewQuote(
     fieldErrors: errors.fieldErrors
  },
  data:{
-  quote: rawData.quote,
-  author: rawData.author
+  quote: rawData.quote?.toString() || "",
+  author: rawData.author?.toString() || "",
+  category: rawData.category as QuoteCategory
 
- }
- }
+ }}
  } else{
   return{
     success:true,
     data: {
       quote: safeParsedResult.data.quote,
-      author: safeParsedResult.data.author
+      author: safeParsedResult.data.author,
+      category: safeParsedResult.data.category
     }
     
   }
