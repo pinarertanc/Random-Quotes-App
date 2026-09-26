@@ -1,6 +1,5 @@
 import {Children} from "react";
 
-
 export interface CardProps {
 variant?: string;
 className?: string;

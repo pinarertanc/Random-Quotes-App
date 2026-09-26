@@ -30,6 +30,9 @@ export interface myQuotesProps {
   author:string;
   likedBy?: string[];
   category?: string[];
+  createdBy?: string;
+  createdAt?: string;
+  updatedAt?: string;
  
 }
 

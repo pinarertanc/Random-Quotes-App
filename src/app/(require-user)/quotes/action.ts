@@ -13,15 +13,16 @@ export async function getQuotes(){
 export async function deleteQuote(quoteId: string) {
   
   const session = await auth0.getSession();
+  const userId = session?.user?.sub;
 
-  if (!session) {
+  if (!session || !userId) {
     throw new Error('Please log in.');
   }
 
- const success = await deleteQuoteById(quoteId);
+ const success = await deleteQuoteById(quoteId, userId);
 
   if (success) {
-    // Sayfadaki listenin anında güncellenmesi için önbelleği tazeliyoruz
+
     revalidatePath('/user/quotes');
     revalidatePath('/');
   }
