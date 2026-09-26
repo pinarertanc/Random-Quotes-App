@@ -13,8 +13,9 @@ function toQuote(document: QuoteDocument): myQuotesProps {
     createdBy: document.createdBy,
     createdAt: document.createdAt,
     updatedAt: document.updatedAt,
-  };
-}
+   
+   
+}}
 
 function parseQuoteObjectId(quoteId: string): ObjectId | null {
   if (!ObjectId.isValid(quoteId)) {
@@ -70,7 +71,8 @@ export async function insertQuote(input: {
     likedBy: [],
     createdBy: input.createdBy,
     createdAt: now,
-    updatedAt: now
+    updatedAt: now,
+    category: input.category,
   };
   await collection.insertOne(document);
 
@@ -106,7 +108,7 @@ export async function updateQuoteLikedBy(
   return updated ? toQuote(updated) : null;
 }
 
-export async function deleteQuoteById(quoteId: string): Promise<boolean> {
+export async function deleteQuoteById(quoteId: string, userId: string): Promise<boolean> {
   const objectId = parseQuoteObjectId(quoteId);
 
   if (!objectId) {
@@ -114,6 +116,11 @@ export async function deleteQuoteById(quoteId: string): Promise<boolean> {
   }
 
   const collection = await quotesCollection();
-  const result = await collection.deleteOne({ _id: objectId });
+  const result = await collection.deleteOne({ 
+    _id: objectId,
+    createdBy: userId
+  
+  });
+  
   return result.deletedCount === 1;
 }

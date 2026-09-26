@@ -8,4 +8,5 @@ export interface QuoteDocument {
   createdBy: string;
   createdAt: string;
   updatedAt: string;
+  category: string;
 }

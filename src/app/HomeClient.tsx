@@ -1,9 +1,9 @@
 'use client';
 
 import { useState, useTransition } from 'react';
+import { useRouter } from 'next/navigation';
 import { useUser } from '@auth0/nextjs-auth0';
 import { 
-  ThumbsUpIcon, 
   CaretLeftIcon, 
   CaretRightIcon, 
   QuotesIcon, 
@@ -14,25 +14,28 @@ import {
 } from '@phosphor-icons/react';
 
 import { Button, ButtonSize, ButtonVariant } from '@/components/ui/button';
-import { Author } from '@/components/author';
-import { Quote } from '@/components/quote';
-import { Card } from '@/components/card';
 import { HomeProps } from '@/types/clientComponent';
-import { myQuotesProps } from '@/types/quotes';
+import { QuoteCard } from '@/components/quote-card';
 
 import { deleteQuote } from './(require-user)/quotes/action';
 import { toggleLikeQuote } from './(require-user)/user/quotes/favorite/action';
 
-export default function Home({ initialQuotes, userId }: HomeProps) {
+export default function Home({ initialQuotes }: HomeProps) {
+  const router = useRouter();
   const { user } = useUser();
   const [index, setIndex] = useState<number>(0);
-  const [myQuotes, setMyQuotes] = useState<myQuotesProps[]>(initialQuotes);
   const [isPending, startTransition] = useTransition();
 
   const [showAuthRequired, setShowAuthRequired] = useState(false);
+  // 🟢 Artık myQuotes yok, doğrudan MongoDB'den gelen initialQuotes kullanılıyor
+  const activeUserId = user?.sub;
+  const currentQuote = initialQuotes[index];
+  const isLikedQuote = Boolean(
+    activeUserId && currentQuote?.likedBy?.includes(activeUserId)
+  );
 
   const handleNextClick = () => {
-    if (index < myQuotes.length - 1) {
+    if (index < initialQuotes.length - 1) {
       setIndex((prevIndex) => prevIndex + 1);
     }
   };
@@ -43,41 +46,32 @@ export default function Home({ initialQuotes, userId }: HomeProps) {
     }
   };
 
-  const handleLike = (targetQuote: myQuotesProps) => {
+  const handleLike = async (quoteId: string) => {
     if (!user) {
       setShowAuthRequired(true);
       return;
     }
 
-    const currentUserId = user.sub;
-
-    setMyQuotes((prevQuotes) =>
-      prevQuotes.map((item) => {
-        if (item.id !== targetQuote.id && targetQuote.quote !== item.quote) return item;
-
-        const currentLikedBy = item.likedBy || [];
-        const alreadyLiked = currentLikedBy.includes(currentUserId);
-
-        const updatedLikedBy = alreadyLiked
-          ? currentLikedBy.filter((id) => id !== currentUserId)
-          : [...currentLikedBy, currentUserId];
-
-        return {
-          ...item,
-          likedBy: updatedLikedBy
-        };
-      })
-    );
-
     startTransition(async () => {
-      await toggleLikeQuote(targetQuote.id, userId);
+      await toggleLikeQuote(quoteId);
+      // 🟢 Veritabanı değiştiği için sunucudan taze veriyi çekiyoruz
+      router.refresh();
     });
   }; 
 
-  const handleDelete = (quoteId: string) => {
+  const handleDelete = async (quoteId: string) => {
     if (confirm("Are you sure you want to delete this quote?")) {
       startTransition(async () => {
-        await deleteQuote(quoteId);
+        const res = await deleteQuote(quoteId);
+
+        if (res?.success) {
+          // 🟢 Eğer silinen eleman son elemansa index'i bir geriye çekiyoruz
+          if (index >= initialQuotes.length - 1 && index > 0) {
+            setIndex((prev) => prev - 1);
+          }
+          // 🟢 MongoDB'deki silinmeyi arayüze yansıtmak için taze veriyi çekiyoruz
+          router.refresh();
+        }
       });
     }
   };
@@ -144,43 +138,35 @@ export default function Home({ initialQuotes, userId }: HomeProps) {
           <div className="text-primary/40">
             <QuotesIcon size={40} weight="fill" />
           </div>
+        </div>
 
-          <Button
-            onClick={() => currentQuote && handleLike(currentQuote)}
-            variant={ButtonVariant.Ghost}
-            type="button"
-            disabled={isPending}
-            aria-label={isLikedQuote ? "Unlike quote" : "Like quote"}
-            className="rounded-full p-2.5 hover:bg-rose-500/10 transition-colors"
-          >
-            <ThumbsUpIcon
-              size={28}
-              weight={isLikedQuote ? "fill" : "regular"}
-              className={`transition-all active:scale-80 ${
-                isLikedQuote
-                  ? "text-rose-500 dark:text-rose-400"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
+        {/* Söz Kartı */}
+        {currentQuote ? (
+          <div className="my-auto">
+            <QuoteCard
+              quote={currentQuote}
+              isLiked={isLikedQuote}
+              currentUserId={activeUserId}
+              onToggleLike={() => handleLike(currentQuote.id)}
+              onDelete={() => handleDelete(currentQuote.id)}
             />
-          </Button>
-        </div>
+          </div>
+        ) : (
+          <div className="text-center py-12 text-muted-foreground">
+            No quotes available.
+          </div>
+        )}
 
-        <div className="flex flex-col items-center text-center my-auto py-2 space-y-2">
-          <Quote label={currentQuote?.quote || ''} />
-          {currentQuote?.author && (
-            <Author label={`- ${currentQuote.author}`} />
-          )}
-        </div>
-
-        <div className="pt-6 border-t border-white/20 dark:border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
-         <span className="text-xs font-semibold text-slate-700 dark:text-slate-200 bg-white/40 dark:bg-black/40 px-3 py-1 rounded-full border border-white/40 dark:border-white/10 backdrop-blur-sm order-2 sm:order-1 shadow-xs">
-  {myQuotes.length > 0 ? `${index + 1} / ${myQuotes.length}` : '0 / 0'}
-</span>
+        {/* Alt Kısım: Gezinti (Navigasyon) Butonları */}
+        <div className="pt-6 border-t border-border/50 flex flex-col sm:flex-row items-center justify-between gap-4 mt-6">
+          <span className="text-xs text-muted-foreground font-medium order-2 sm:order-1">
+            {initialQuotes.length > 0 ? `${index + 1} / ${initialQuotes.length}` : '0 / 0'}
+          </span>
 
           <div className="flex items-center gap-3 w-full sm:w-auto order-1 sm:order-2">
             <Button
               onClick={handlePrevClick}
-              disabled={index === 0}
+              disabled={index === 0 || isPending}
               size={ButtonSize.Sm}
               variant={ButtonVariant.Outline}
               className="flex-1 sm:flex-initial gap-1.5"
@@ -191,27 +177,17 @@ export default function Home({ initialQuotes, userId }: HomeProps) {
 
             <Button
               onClick={handleNextClick}
-              disabled={index === (myQuotes.length ? myQuotes.length - 1 : 0)}
+              disabled={index === (initialQuotes.length ? initialQuotes.length - 1 : 0) || isPending}
               size={ButtonSize.Sm}
               className="flex-1 sm:flex-initial gap-1.5"
             >
               <span>Next</span>
               <CaretRightIcon size={16} />
             </Button>
-
-            {currentQuote && activeUserId === currentQuote.createdBy && (
-              <Button
-                variant={ButtonVariant.Destructive}
-                disabled={isPending}
-                onClick={() => handleDelete(currentQuote.id)}
-              >
-                <TrashIcon size={20} />
-              </Button>
-            )}
           </div>
         </div>
 
-      </Card>
+      </div>
     </main>
   );
 }

@@ -32,7 +32,9 @@ export interface myQuotesProps {
   author:string;
   likedBy?: string[];
   category?: string[];
-  title?: string;
+  createdBy?: string;
+  createdAt?: string;
+  updatedAt?: string;
  
 }
 

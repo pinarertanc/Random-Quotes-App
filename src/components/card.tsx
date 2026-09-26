@@ -1,8 +1,9 @@
 import { ReactNode } from "react";
 
-interface CardProps {
-  children: ReactNode;
-  className?: string;
+export interface CardProps {
+variant?: string;
+className?: string;
+children:React.ReactNode;
 }
 
 export function Card({ children, className = "" }: CardProps) {
