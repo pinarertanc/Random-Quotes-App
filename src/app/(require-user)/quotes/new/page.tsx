@@ -1,5 +1,10 @@
-'use client';
-import { Field, FieldGroup, FieldError, FieldLabel } from "@/components/ui/field";
+"use client";
+import {
+  Field,
+  FieldGroup,
+  FieldError,
+  FieldLabel,
+} from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useActionState, useEffect } from "react";
@@ -11,22 +16,24 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { NewQuoteFormState } from "@/types/quotes";
 
-
-
 const initialFormState: NewQuoteFormState = {
   success: false,
-}
-
+};
 
 export default function NewQuotePage() {
-
   const router = useRouter();
-  const [state, dispatchAction, isPending] = useActionState(handleNewQuote, initialFormState);
-  const { register, formState: { errors }} = useForm({ mode: 'onBlur', resolver: zodResolver(NewQuoteSchema) });
+  const [state, dispatchAction, isPending] = useActionState(
+    handleNewQuote,
+    initialFormState,
+  );
+  const {
+    register,
+    formState: { errors },
+  } = useForm({ mode: "onBlur", resolver: zodResolver(NewQuoteSchema) });
 
   useEffect(() => {
     if (state?.success) {
-      router.push('/quotes/new/success');
+      router.push("/quotes/new/success");
     }
   }, [state?.success, router]);
 
@@ -35,7 +42,7 @@ export default function NewQuotePage() {
       <div>
         <Spinner className="flex min-h-full items-center justify-center"></Spinner>
       </div>
-    )
+    );
   }
 
   const quoteError = state.errors?.fieldErrors?.quote;
@@ -44,47 +51,68 @@ export default function NewQuotePage() {
   const titleError = state.errors?.fieldErrors?.title;
 
   return (
-
-    <form autoComplete="off" className="w-full max-w-3xl mx-auto my-20 sm:my-40 px-4 sm:px-8" action={dispatchAction} aria-describedby={state.message}>
-      {
-        state.message && (
-          <p id="form-error" role="alert" className="text-destructive">{state.message}</p>
-
-        )
-      }
+    <form
+      autoComplete="off"
+      className="w-full max-w-3xl mx-auto my-20 sm:my-40 px-4 sm:px-8"
+      action={dispatchAction}
+      aria-describedby={state.message}
+    >
+      {state.message && (
+        <p id="form-error" role="alert" className="text-destructive">
+          {state.message}
+        </p>
+      )}
       <FieldGroup>
         <Field>
           <FieldLabel htmlFor="quote">Quote</FieldLabel>
-          <Input type="text" id="quote" name="quote" defaultValue={state.data?.quote} aria-invalid={quoteError ? "true" : "false"}
+          <Input
+            type="text"
+            id="quote"
+            name="quote"
+            defaultValue={state.data?.quote}
+            aria-invalid={quoteError ? "true" : "false"}
             aria-describedby={quoteError ? "quote-error" : undefined}
-            {...register('quote')}></Input>
+            {...register("quote")}
+          ></Input>
           {quoteError && (
             <FieldError id="quote-error" role="alert" errors={quoteError}>
-              {quoteError.join(', ')}
+              {quoteError.join(", ")}
             </FieldError>
           )}
         </Field>
 
         <Field>
           <FieldLabel htmlFor="author">Author</FieldLabel>
-          <Input type="text" id="author" name="author" defaultValue={state.data?.author} aria-invalid={authorError ? "true" : "false"}
-            aria-describedby={authorError ? "author-error" : undefined} 
-            {...register('author')} ></Input>
+          <Input
+            type="text"
+            id="author"
+            name="author"
+            defaultValue={state.data?.author}
+            aria-invalid={authorError ? "true" : "false"}
+            aria-describedby={authorError ? "author-error" : undefined}
+            {...register("author")}
+          ></Input>
           {authorError && (
             <FieldError id="author-error" role="alert" errors={authorError}>
-              {authorError.join(', ')}
+              {authorError.join(", ")}
             </FieldError>
           )}
         </Field>
 
         <Field>
           <FieldLabel htmlFor="title">Book Title</FieldLabel>
-          <Input type="text" id="title" name="title" defaultValue={state.data?.title} aria-invalid={titleError ? "true" : "false"}
-            aria-describedby={titleError ? "title-error" : undefined} 
-            {...register('title')} ></Input>
+          <Input
+            type="text"
+            id="title"
+            name="title"
+            defaultValue={state.data?.title}
+            aria-invalid={titleError ? "true" : "false"}
+            aria-describedby={titleError ? "title-error" : undefined}
+            {...register("title")}
+          ></Input>
           {titleError && (
             <FieldError id="title-error" role="alert" errors={titleError}>
-              {titleError.join(', ')}
+              {titleError.join(", ")}
             </FieldError>
           )}
         </Field>
@@ -103,7 +131,7 @@ export default function NewQuotePage() {
                   id={`category-${catValue}`}
                   value={catValue}
                   defaultChecked={state.data?.category === catValue}
-                  {...register('category')}
+                  {...register("category")}
                   className="w-4 h-4 text-primary accent-primary"
                 />
                 <span className="text-sm font-medium">{catValue}</span>
@@ -119,18 +147,13 @@ export default function NewQuotePage() {
 
           {state.errors?.fieldErrors?.category && (
             <FieldError errors={categoryError}>
-              {categoryError.join(', ')}
+              {categoryError.join(", ")}
             </FieldError>
           )}
         </Field>
 
         <Button type="submit">Add New Quote</Button>
       </FieldGroup>
-
     </form>
-
-
-  )
+  );
 }
-
-

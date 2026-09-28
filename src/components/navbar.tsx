@@ -112,7 +112,7 @@ export function Navbar() {
                         </Link>
 
                         <Link
-                          href="/quotes"
+                           href="/user/quotes/added"
                           className="flex items-center gap-2.5 px-3 py-2 text-sm font-medium text-foreground hover:bg-white/60 dark:hover:bg-white/10 rounded-xl transition-colors"
                         >
                           <BookmarkSimpleIcon size={18} className="text-primary" />

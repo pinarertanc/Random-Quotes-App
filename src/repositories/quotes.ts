@@ -13,8 +13,8 @@ function toQuote(document: QuoteDocument): myQuotesProps {
     createdBy: document.createdBy,
     createdAt: document.createdAt,
     updatedAt: document.updatedAt,
-   
-   
+    addedBy: document.addedBy ?? [],
+    title: document.title,
 }}
 
 function parseQuoteObjectId(quoteId: string): ObjectId | null {
@@ -48,6 +48,16 @@ export async function listAllQuotes(): Promise<myQuotesProps[]> {
   return documents.map(toQuote);
 }
 
+export async function listAddedQuotes(userId: string): Promise<myQuotesProps[]>{
+  const collection = await quotesCollection();
+  const documents = await collection
+  .find({addedBy: userId})
+  .sort({_id: 1})
+  .toArray();
+  return documents.map(toQuote);
+}
+
+
 export async function listFavouriteQuotes(userId: string): Promise<myQuotesProps[]> {
   const collection = await quotesCollection();
   const documents = await collection
@@ -61,6 +71,11 @@ export async function insertQuote(input: {
   quote: string;
   author: string;
   createdBy: string;
+  category: string;
+  title: string;
+  createdAt:string;
+  updatedAt: string;
+  addedBy: string;
 }): Promise<myQuotesProps> {
   const collection = await quotesCollection();
   const now = (new Date()).toString();
@@ -73,6 +88,9 @@ export async function insertQuote(input: {
     createdAt: now,
     updatedAt: now,
     category: input.category,
+    title: input.title,
+    addedBy: [],
+  
   };
   await collection.insertOne(document);
 

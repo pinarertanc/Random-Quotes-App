@@ -4,8 +4,7 @@ import { auth0 } from "@/lib/auth0";
 import { insertQuote } from "@/repositories/quotes";
 import { NewQuoteFormState, NewQuoteSchema } from "@/types/quotes";
 import { z } from 'zod';
-import {revalidatePath} from 'next/cache';
-import { redirect } from "next/navigation";
+import { revalidatePath } from 'next/cache';
 
 export async function handleNewQuote(
   _currentState: NewQuoteFormState,
@@ -22,15 +21,15 @@ export async function handleNewQuote(
   }
 
   const rawData = {
-    quote: formData.get('quote') ?? '',
-    author: formData.get('author') ?? '',
-    category: formData.get('category') ?? '',
-    createdAt: new Date().toString() ?? '',
-    updatedAt: new Date().toString() ?? '',
+    quote: String(formData.get('quote') ?? ''),
+    author: String(formData.get('author') ?? ''),
+    category: String(formData.get('category') ?? ''),
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    title: String(formData.get('title') ?? ''),
   };
 
   const safeParsedResult = NewQuoteSchema.safeParse(rawData);
-
 
   if (!safeParsedResult.success) {
     const errors = z.flattenError(safeParsedResult.error);
@@ -42,10 +41,8 @@ export async function handleNewQuote(
       data: {
         quote: rawData.quote,
         author: rawData.author,
-        category: rawData.category,
-        createdAt: rawData.createdAt,
-        updatedAt: rawData.updatedAt
-
+        category: rawData.category as any, // veya uygun tip
+        title: rawData.title,
       }
     }
   } 
@@ -55,10 +52,12 @@ export async function handleNewQuote(
       quote: safeParsedResult.data.quote,
       author: safeParsedResult.data.author,
       category: safeParsedResult.data.category,
-      createdAt: safeParsedResult.data.createdAt,
-      updatedAt: safeParsedResult.data.updatedAt,
-      createdBy: session.user.sub
+      title: safeParsedResult.data.title,
+      createdBy: session.user.sub,
+      createdAt: rawData.createdAt, // <-- rawData'dan alıyoruz
+      updatedAt: rawData.updatedAt, // <-- rawData'dan alıyoruz
     });
+    
     revalidatePath('/');
 
     return {
@@ -66,16 +65,14 @@ export async function handleNewQuote(
       data: {
         quote: safeParsedResult.data.quote,
         author: safeParsedResult.data.author,
-        category: safeParsedResult.data.category,
-        createdAt: rawData.createdAt,
-        updatedAt: rawData.updatedAt
+        category: safeParsedResult.data.category as any,
+        title: safeParsedResult.data.title,
       }
     };
   } catch (error) {
     return {
       success: false,
       message: 'Failed to insert quote. Please try again later.'
-      };
-}
-
+    };
+  }
 }

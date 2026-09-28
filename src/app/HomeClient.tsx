@@ -3,11 +3,10 @@
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { useUser } from '@auth0/nextjs-auth0';
-import { 
-  CaretLeftIcon, 
-  CaretRightIcon, 
-  QuotesIcon, 
-  TrashIcon,
+import {
+  CaretLeftIcon,
+  CaretRightIcon,
+  QuotesIcon,
   LockKeyIcon,
   SignInIcon,
   XIcon
@@ -27,7 +26,6 @@ export default function Home({ initialQuotes }: HomeProps) {
   const [isPending, startTransition] = useTransition();
 
   const [showAuthRequired, setShowAuthRequired] = useState(false);
-  // 🟢 Artık myQuotes yok, doğrudan MongoDB'den gelen initialQuotes kullanılıyor
   const activeUserId = user?.sub;
   const currentQuote = initialQuotes[index];
   const isLikedQuote = Boolean(
@@ -54,10 +52,9 @@ export default function Home({ initialQuotes }: HomeProps) {
 
     startTransition(async () => {
       await toggleLikeQuote(quoteId);
-      // 🟢 Veritabanı değiştiği için sunucudan taze veriyi çekiyoruz
       router.refresh();
     });
-  }; 
+  };
 
   const handleDelete = async (quoteId: string) => {
     if (confirm("Are you sure you want to delete this quote?")) {
@@ -65,11 +62,9 @@ export default function Home({ initialQuotes }: HomeProps) {
         const res = await deleteQuote(quoteId);
 
         if (res?.success) {
-          // 🟢 Eğer silinen eleman son elemansa index'i bir geriye çekiyoruz
           if (index >= initialQuotes.length - 1 && index > 0) {
             setIndex((prev) => prev - 1);
           }
-          // 🟢 MongoDB'deki silinmeyi arayüze yansıtmak için taze veriyi çekiyoruz
           router.refresh();
         }
       });
@@ -109,7 +104,7 @@ export default function Home({ initialQuotes }: HomeProps) {
               <SignInIcon size={20} />
               <span>Log In</span>
             </a>
-            
+
             <button
               type="button"
               onClick={() => setShowAuthRequired(false)}
@@ -123,26 +118,21 @@ export default function Home({ initialQuotes }: HomeProps) {
     );
   }
 
-  const currentQuote = myQuotes[index];
-  const activeUserId = userId || user?.sub;
-  const isLikedQuote = activeUserId && currentQuote?.likedBy 
-    ? currentQuote.likedBy.includes(activeUserId) 
-    : false;
-
   return (
     <main className="flex min-h-[calc(100vh-4rem)] w-full items-center justify-center p-4 sm:p-8 bg-transparent text-foreground">
-      {/* 🟢 Card üzerindeki ezici bg-white/70, bg-zinc-900/70 ve border sınıfları temizlendi */}
-      <Card className="flex w-full max-w-2xl flex-col justify-between min-h-[300px]">
+      {/* Tüm içeriği ortalayan ve max genişlik veren kapsayıcı */}
+      <div className="w-full max-w-2xl mx-auto flex flex-col justify-center">
 
+        {/* Üst İkon Alanı */}
         <div className="flex items-center justify-between w-full mb-2">
           <div className="text-primary/40">
             <QuotesIcon size={40} weight="fill" />
           </div>
         </div>
 
-        {/* Söz Kartı */}
+        {/* Söz Kartı Alanı */}
         {currentQuote ? (
-          <div className="my-auto">
+          <div className="w-full my-2">
             <QuoteCard
               quote={currentQuote}
               isLiked={isLikedQuote}
@@ -159,7 +149,8 @@ export default function Home({ initialQuotes }: HomeProps) {
 
         {/* Alt Kısım: Gezinti (Navigasyon) Butonları */}
         <div className="pt-6 border-t border-border/50 flex flex-col sm:flex-row items-center justify-between gap-4 mt-6">
-          <span className="text-xs text-muted-foreground font-medium order-2 sm:order-1">
+          {/* Sayaç daha belirgin hale getirildi */}
+          <span className="text-sm text-foreground font-semibold order-2 sm:order-1">
             {initialQuotes.length > 0 ? `${index + 1} / ${initialQuotes.length}` : '0 / 0'}
           </span>
 

@@ -1,8 +1,0 @@
-MONGODB_URI=mongodb+srv://pinarertanc_db_user:aGVTb7F5OJV3rh2G@randomquotesapp.gzncoxa.mongodb.net/RandomQuotesApp?retryWrites=true&w=majority
-MONGODB_DB=RandomQuotesApp
-
-APP_BASE_URL=http://localhost:3000
-AUTH0_DOMAIN=dev-de6yjbgl4pgj753r.us.auth0.com
-AUTH0_CLIENT_ID=MxC5mzYeA2IzIFeAYTH3pkYYOS8MfEIY
-AUTH0_CLIENT_SECRET=TpICrEkLy-xNvZbDs8Q8dNIzI93wPhNzmkpdegJdIt6u1V0grxVe6tw7kAvzfCJN
-AUTH0_SECRET=a1ab3edd7e510ba6494d4803b37f9a632d242e7fde5b7593b412987437d098c9
