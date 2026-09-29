@@ -12,6 +12,6 @@ export async function getAddedQuotesAction() {
     return [];
   }
 
-  const likedQuotes = await listAddedQuotes(userId);
-  return likedQuotes;
+  const addedQuotes = await listAddedQuotes(userId);
+  return addedQuotes;
 }

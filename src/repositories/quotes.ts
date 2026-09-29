@@ -10,10 +10,9 @@ function toQuote(document: QuoteDocument): myQuotesProps {
     quote: document.quote,
     author: document.author,
     likedBy: document.likedBy ?? [],
-    createdBy: document.createdBy,
     createdAt: document.createdAt,
     updatedAt: document.updatedAt,
-    addedBy: document.addedBy ?? [],
+    addedBy: document.addedBy ?? '',
     title: document.title,
 }}
 
@@ -34,7 +33,9 @@ export async function insertQuotes(seedQuotes: QuoteSeed[]): Promise<void> {
       quote: seedQuote.quote,
       author: seedQuote.author,
       likedBy: [] as string[],
-      createdBy: 'seed',
+      addedBy: 'seed',
+      title: seedQuote.title ?? 'Seed Quote',
+      category: seedQuote.category ?? 'General',
       createdAt: new Date().toString(),
       updatedAt: new Date().toString(),
     })),
@@ -70,7 +71,6 @@ export async function listFavouriteQuotes(userId: string): Promise<myQuotesProps
 export async function insertQuote(input: {
   quote: string;
   author: string;
-  createdBy: string;
   category: string;
   title: string;
   createdAt:string;
@@ -84,12 +84,11 @@ export async function insertQuote(input: {
     quote: input.quote,
     author: input.author,
     likedBy: [],
-    createdBy: input.createdBy,
     createdAt: now,
     updatedAt: now,
     category: input.category,
     title: input.title,
-    addedBy: [],
+    addedBy:input.addedBy,
   
   };
   await collection.insertOne(document);
@@ -136,7 +135,7 @@ export async function deleteQuoteById(quoteId: string, userId: string): Promise<
   const collection = await quotesCollection();
   const result = await collection.deleteOne({ 
     _id: objectId,
-    createdBy: userId
+    addedBy: userId
   
   });
   

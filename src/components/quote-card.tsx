@@ -30,7 +30,7 @@ export function QuoteCard({
     authorLabel = `- ${bookTitle}`;
   }
 
-  const isOwner = currentUserId && quote.createdBy === currentUserId;
+  const isOwner = currentUserId && quote.addedBy === currentUserId;
 
   return (
     <div className="p-6 rounded-2xl border bg-white/10 dark:bg-black/20 border-white/20 dark:border-white/10 shadow-xl backdrop-blur-md transition-all flex flex-col justify-between gap-6">

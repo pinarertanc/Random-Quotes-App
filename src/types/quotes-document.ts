@@ -7,8 +7,7 @@ export interface QuoteDocument {
   author: string;
   likedBy: string[];
   title: string;
-  addedBy: string[];
-  createdBy: string;
+  addedBy: string;
   createdAt: string;
   updatedAt: string;
   category: string;

@@ -27,6 +27,8 @@ export async function handleNewQuote(
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
     title: String(formData.get('title') ?? ''),
+    addedBy:session.user.sub,
+    
   };
 
   const safeParsedResult = NewQuoteSchema.safeParse(rawData);
@@ -53,12 +55,13 @@ export async function handleNewQuote(
       author: safeParsedResult.data.author,
       category: safeParsedResult.data.category,
       title: safeParsedResult.data.title,
-      createdBy: session.user.sub,
       createdAt: rawData.createdAt, // <-- rawData'dan alıyoruz
-      updatedAt: rawData.updatedAt, // <-- rawData'dan alıyoruz
+      updatedAt: rawData.updatedAt,
+      addedBy: session.user.sub // <-- rawData'dan alıyoruz
     });
     
     revalidatePath('/');
+    revalidatePath('/user/quotes/added');
 
     return {
       success: true,
