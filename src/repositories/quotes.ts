@@ -141,3 +141,29 @@ export async function deleteQuoteById(quoteId: string, userId: string): Promise<
   
   return result.deletedCount === 1;
 }
+
+export async function updateAddedQuote(
+  id:string,
+  userId:string,
+  data:{
+      quote: string;
+      author: string;
+      category: string;
+      title: string;
+  }
+) {
+  const collection = await quotesCollection();
+  const documents = await collection
+  .updateOne(
+    {addedBy: userId, id: id},
+    {$set:{
+      quote: data.quote,
+      author: data.author,
+      title: data.title,
+      category: data.category
+    }}
+
+  )
+  return documents.modifiedCount > 0;
+  
+}
