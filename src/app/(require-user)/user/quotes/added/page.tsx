@@ -2,9 +2,14 @@ import { QuoteCard } from "@/components/quote-card";
 import { getAddedQuotesAction } from "./action";
 import { toggleLikeQuote } from "@/app/(require-user)/user/quotes/favorite/action";
 import Link from "next/link";
-import{HeartBreakIcon, ArrowLeftIcon} from "@phosphor-icons/react/dist/ssr";
+import { HeartBreakIcon, ArrowLeftIcon } from "@phosphor-icons/react/dist/ssr";
+import { deleteQuote } from "@/app/(require-user)/quotes/action";
+import { auth0 } from "@/lib/auth0";
 
 export default async function AddedQuotesPage() {
+
+  const session = await auth0.getSession();
+  const userId = session?.user?.sub;
 
   const addedQuotes = await getAddedQuotesAction();
 
@@ -35,8 +40,10 @@ export default async function AddedQuotesPage() {
             >
               <QuoteCard
                 quote={quote}
-                isLiked={true}
+                currentUserId={userId}
+                onDelete={deleteQuote}  
                 onToggleLike={handleToggleLike}
+                editHref={`/quotes/${quote.id}/edit`} 
               />
             </div>
           ))}

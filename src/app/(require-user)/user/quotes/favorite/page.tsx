@@ -32,7 +32,6 @@ export default async function FavoriteQuotesPage() {
               key={`${quote.id}-${idx}`}
               className="w-full transition-all duration-200 hover:-translate-y-0.5"
             >
-              {/* 🟢 Uzun kart markup'ı yerine sadece QuoteCard: */}
               <QuoteCard
                 quote={quote}
                 isLiked={true}

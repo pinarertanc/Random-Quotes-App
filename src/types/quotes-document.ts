@@ -7,7 +7,7 @@ export interface QuoteDocument {
   author: string;
   likedBy: string[];
   title: string;
-  addedBy: string;
+  addedBy: string
   createdAt: string;
   updatedAt: string;
   category: string;
@@ -17,6 +17,7 @@ export interface QuoteCardProps {
   quote: myQuotesProps;
   isLiked?: boolean;
   currentUserId?: string;
-  onToggleLike?: (quoteId: string) => Promise<void>;
-  onDelete?: (quoteId: string) => Promise<void>;
+  onToggleLike?: (quoteId: string) => Promise<unknown>;
+  onDelete?: (quoteId: string) => Promise<unknown>;
+  editHref?: string; 
 }
