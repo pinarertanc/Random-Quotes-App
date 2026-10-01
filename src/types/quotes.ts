@@ -13,7 +13,7 @@ export interface NewQuoteFormState {
     author?: string,
     quote?: string,
     title?: string,
-    category?: string;
+    category?: ReadingStatus;
   };
   errors?: {
     fieldErrors: {
@@ -33,7 +33,7 @@ export interface myQuotesProps {
   title: string;
   likedBy?: string[];
   addedBy?: string;
-  category?: string;
+  category?: ReadingStatus;
   createdAt?: string;
   updatedAt?: string;
 
@@ -63,3 +63,4 @@ export const NewQuoteSchema = z.object({
     message: 'Please select a valid category from the list.',
   }),
 });
+

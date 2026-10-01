@@ -1,7 +1,7 @@
 'use server';
 import { ObjectId } from 'mongodb';
 import { quotesCollection } from '@/lib/db/collections';
-import type { myQuotesProps, QuoteSeed } from '@/types/quotes';
+import { ReadingStatus, type myQuotesProps, type QuoteSeed } from '@/types/quotes';
 import type { QuoteDocument } from '@/types/quotes-document';
 
 function toQuote(document: QuoteDocument): myQuotesProps {
@@ -59,6 +59,14 @@ export async function listAddedQuotes(userId: string): Promise<myQuotesProps[]>{
 }
 
 
+export async function listBooksByReadingCategory(userId: string, category:ReadingStatus): Promise<myQuotesProps[]>{
+  const collection = await quotesCollection();
+  const documents = await collection.find({category: category, addedBy: userId})
+  .sort({_id: -1})
+  .toArray();
+  return documents.map(toQuote);
+}
+
 export async function listFavouriteQuotes(userId: string): Promise<myQuotesProps[]> {
   const collection = await quotesCollection();
   const documents = await collection
@@ -71,7 +79,7 @@ export async function listFavouriteQuotes(userId: string): Promise<myQuotesProps
 export async function insertQuote(input: {
   quote: string;
   author: string;
-  category: string;
+  category: ReadingStatus;
   title: string;
   createdAt:string;
   updatedAt: string;
@@ -148,22 +156,42 @@ export async function updateAddedQuote(
   data:{
       quote: string;
       author: string;
-      category: string;
+      category: ReadingStatus;
       title: string;
   }
 ) {
   const collection = await quotesCollection();
   const documents = await collection
   .updateOne(
-    {addedBy: userId, id: id},
+    {addedBy: userId, _id: new ObjectId(id)},
     {$set:{
       quote: data.quote,
       author: data.author,
       title: data.title,
       category: data.category
-    }}
+    }},
 
   )
   return documents.modifiedCount > 0;
   
+
+}
+
+export async function getQuoteById(id: string): Promise<myQuotesProps | null> {
+  const collection = await quotesCollection();
+  
+  const quote = await collection.findOne({ _id: new ObjectId(id) });
+
+  
+
+  if (!quote) return null;
+
+  return {
+    id:quote._id.toString(),
+    quote: quote.quote,
+    author: quote.author,
+    title: quote.title,
+    category: quote.category,
+    addedBy: quote.addedBy,
+  } as myQuotesProps;
 }
