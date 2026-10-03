@@ -1,7 +1,7 @@
 'use server';
 import { ObjectId } from 'mongodb';
 import { quotesCollection } from '@/lib/db/collections';
-import type { myQuotesProps, QuoteSeed } from '@/types/quotes';
+import { ReadingStatus, type myQuotesProps, type QuoteSeed } from '@/types/quotes';
 import type { QuoteDocument } from '@/types/quotes-document';
 
 function toQuote(document: QuoteDocument): myQuotesProps {
@@ -10,11 +10,11 @@ function toQuote(document: QuoteDocument): myQuotesProps {
     quote: document.quote,
     author: document.author,
     likedBy: document.likedBy ?? [],
-    createdBy: document.createdBy,
     createdAt: document.createdAt,
     updatedAt: document.updatedAt,
-  };
-}
+    addedBy: document.addedBy ?? '',
+    title: document.title,
+}}
 
 function parseQuoteObjectId(quoteId: string): ObjectId | null {
   if (!ObjectId.isValid(quoteId)) {
@@ -33,7 +33,9 @@ export async function insertQuotes(seedQuotes: QuoteSeed[]): Promise<void> {
       quote: seedQuote.quote,
       author: seedQuote.author,
       likedBy: [] as string[],
-      createdBy: 'seed',
+      addedBy: 'seed',
+      title: seedQuote.title ?? 'Seed Quote',
+      category: seedQuote.category ?? 'General',
       createdAt: new Date().toString(),
       updatedAt: new Date().toString(),
     })),
@@ -44,6 +46,24 @@ export async function listAllQuotes(): Promise<myQuotesProps[]> {
   const collection = await quotesCollection();
   //.sort({ _id: 1 }) - ascending order
   const documents = await collection.find({}).sort({ _id: 1 }).toArray();
+  return documents.map(toQuote);
+}
+
+export async function listAddedQuotes(userId: string): Promise<myQuotesProps[]>{
+  const collection = await quotesCollection();
+  const documents = await collection
+  .find({addedBy: userId})
+  .sort({_id: 1})
+  .toArray();
+  return documents.map(toQuote);
+}
+
+
+export async function listBooksByReadingCategory(userId: string, category:ReadingStatus): Promise<myQuotesProps[]>{
+  const collection = await quotesCollection();
+  const documents = await collection.find({category: category, addedBy: userId})
+  .sort({_id: -1})
+  .toArray();
   return documents.map(toQuote);
 }
 
@@ -59,7 +79,11 @@ export async function listFavouriteQuotes(userId: string): Promise<myQuotesProps
 export async function insertQuote(input: {
   quote: string;
   author: string;
-  createdBy: string;
+  category: ReadingStatus;
+  title: string;
+  createdAt:string;
+  updatedAt: string;
+  addedBy: string;
 }): Promise<myQuotesProps> {
   const collection = await quotesCollection();
   const now = (new Date()).toString();
@@ -68,9 +92,12 @@ export async function insertQuote(input: {
     quote: input.quote,
     author: input.author,
     likedBy: [],
-    createdBy: input.createdBy,
     createdAt: now,
-    updatedAt: now
+    updatedAt: now,
+    category: input.category,
+    title: input.title,
+    addedBy:input.addedBy,
+  
   };
   await collection.insertOne(document);
 
@@ -106,7 +133,7 @@ export async function updateQuoteLikedBy(
   return updated ? toQuote(updated) : null;
 }
 
-export async function deleteQuoteById(quoteId: string): Promise<boolean> {
+export async function deleteQuoteById(quoteId: string, userId: string): Promise<boolean> {
   const objectId = parseQuoteObjectId(quoteId);
 
   if (!objectId) {
@@ -114,6 +141,57 @@ export async function deleteQuoteById(quoteId: string): Promise<boolean> {
   }
 
   const collection = await quotesCollection();
-  const result = await collection.deleteOne({ _id: objectId });
+  const result = await collection.deleteOne({ 
+    _id: objectId,
+    addedBy: userId
+  
+  });
+  
   return result.deletedCount === 1;
+}
+
+export async function updateAddedQuote(
+  id:string,
+  userId:string,
+  data:{
+      quote: string;
+      author: string;
+      category: ReadingStatus;
+      title: string;
+  }
+) {
+  const collection = await quotesCollection();
+  const documents = await collection
+  .updateOne(
+    {addedBy: userId, _id: new ObjectId(id)},
+    {$set:{
+      quote: data.quote,
+      author: data.author,
+      title: data.title,
+      category: data.category
+    }},
+
+  )
+  return documents.modifiedCount > 0;
+  
+
+}
+
+export async function getQuoteById(id: string): Promise<myQuotesProps | null> {
+  const collection = await quotesCollection();
+  
+  const quote = await collection.findOne({ _id: new ObjectId(id) });
+
+  
+
+  if (!quote) return null;
+
+  return {
+    id:quote._id.toString(),
+    quote: quote.quote,
+    author: quote.author,
+    title: quote.title,
+    category: quote.category,
+    addedBy: quote.addedBy,
+  } as myQuotesProps;
 }
