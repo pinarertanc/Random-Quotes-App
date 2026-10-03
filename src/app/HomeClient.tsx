@@ -57,6 +57,11 @@ export default function Home({ initialQuotes }: HomeProps) {
   };
 
   const handleDelete = async (quoteId: string) => {
+    if (!user) {
+      setShowAuthRequired(true);
+      return;
+    }
+
     if (confirm("Are you sure you want to delete this quote?")) {
       startTransition(async () => {
         const res = await deleteQuote(quoteId);
@@ -83,7 +88,7 @@ export default function Home({ initialQuotes }: HomeProps) {
             <XIcon size={20} />
           </button>
 
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-blue-50/50 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400 border border-blue-100/30 dark:border-blue-900/30">
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-slate-50/50 dark:bg-blue-950/30 text-slate-800 dark:text-blue-400 border border-blue-100/30 dark:border-blue-900/30">
             <LockKeyIcon size={32} />
           </div>
 
@@ -99,7 +104,7 @@ export default function Home({ initialQuotes }: HomeProps) {
           <div className="pt-2 flex flex-col gap-2">
             <a
               href="/auth/login"
-              className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-sm font-medium text-white shadow-lg shadow-blue-500/20 transition-all hover:bg-blue-700 hover:shadow-blue-500/30 active:scale-[0.98]"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-slate-800 px-5 py-3 text-sm font-medium text-white shadow-lg shadow-blue-500/20 transition-all hover:bg-slate-600 hover:shadow-slate-500/30 active:scale-[0.98]"
             >
               <SignInIcon size={20} />
               <span>Log In</span>
@@ -138,7 +143,7 @@ export default function Home({ initialQuotes }: HomeProps) {
               isLiked={isLikedQuote}
               currentUserId={activeUserId}
               onToggleLike={() => handleLike(currentQuote.id)}
-              onDelete={() => handleDelete(currentQuote.id)}
+              onDelete={user ? () => handleDelete(currentQuote.id) : undefined}
             />
           </div>
         ) : (
